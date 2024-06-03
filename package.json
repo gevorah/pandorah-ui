@@ -1,6 +1,11 @@
 {
   "name": "pandorah-ui",
   "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -8,13 +13,15 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@types/node": "^20.12.12",
     "prettier": "^3.2.5",
-    "turbo": "latest"
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "turbo": "^1.13.3",
+    "typescript": "^5.4.5"
   },
-  "packageManager": "pnpm@8.9.0",
+  "packageManager": "pnpm@9.1.2",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
