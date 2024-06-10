@@ -17,6 +17,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.16",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "react-dropzone": "^14.2.3",
@@ -29,8 +30,8 @@
     "@types/node": "^20.12.12",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
-    "tsup": "^8.0.2",
     "tailwindcss": "^3.4.3",
+    "tsup": "^8.0.2",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
