@@ -43,9 +43,7 @@ type Story = StoryObj<typeof meta>;
 const Template: Story = {
   render: (args) => (
     <Popover {...args}>
-      <Popover.Trigger>
-        <Button>Trigger</Button>
-      </Popover.Trigger>
+      <Popover.Trigger as={Button}>Trigger</Popover.Trigger>
       <Popover.Content className="rounded-lg bg-white p-2 shadow-md">
         <div>Content</div>
         <Popover.Arrow />

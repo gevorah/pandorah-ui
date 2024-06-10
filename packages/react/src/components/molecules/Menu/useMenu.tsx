@@ -25,25 +25,23 @@ import {
 import { usePopup, type UsePopupOptions } from '../Popup';
 import type { UsePopupReturn } from '../Popup/usePopup';
 
-export interface UseMenuOptions extends UsePopupOptions {
+export type UseMenuOptions = {
   trigger?: 'click' | 'hover';
-}
+} & UsePopupOptions;
 
-export interface UseMenuReturn extends UsePopupReturn {
+export type UseMenuReturn = {
   interactions: UseInteractionsReturn;
   nodeId: string;
   elementsRef: MutableRefObject<Array<HTMLElement | null>>;
   labelsRef: MutableRefObject<Array<string | null>>;
   activeIndex: number | null;
   setActiveIndex: Dispatch<SetStateAction<number | null>>;
-  setHasFocusInside: Dispatch<SetStateAction<boolean>>;
-}
+} & UsePopupReturn;
 
 export function useMenu(options: UseMenuOptions): UseMenuReturn {
   const { trigger = 'click', ...popup } = options;
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [hasFocusInside, setHasFocusInside] = useState(false);
 
   const elementsRef = useRef<Array<HTMLElement | null>>([]);
   const labelsRef = useRef<Array<string | null>>([]);
@@ -94,7 +92,6 @@ export function useMenu(options: UseMenuOptions): UseMenuReturn {
     if (!tree) return;
 
     function handleTreeClick() {
-      console.log('HERE IS FALSE');
       setOpen(false);
     }
 
@@ -130,8 +127,7 @@ export function useMenu(options: UseMenuOptions): UseMenuReturn {
       elementsRef,
       labelsRef,
       activeIndex,
-      setActiveIndex,
-      setHasFocusInside
+      setActiveIndex
     }),
     [
       floating,
@@ -143,8 +139,7 @@ export function useMenu(options: UseMenuOptions): UseMenuReturn {
       elementsRef,
       labelsRef,
       activeIndex,
-      setActiveIndex,
-      setHasFocusInside
+      setActiveIndex
     ]
   );
 }

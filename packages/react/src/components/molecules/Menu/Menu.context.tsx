@@ -32,7 +32,6 @@ export type MenuContextValue = {
   labelsRef: MutableRefObject<Array<string | null>>;
   activeIndex: number | null;
   setActiveIndex: Dispatch<SetStateAction<number | null>>;
-  setHasFocusInside: Dispatch<SetStateAction<boolean>>;
 };
 
 const MenuContext = createContext<MenuContextValue | null>(null);

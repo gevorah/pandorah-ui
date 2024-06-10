@@ -3,11 +3,11 @@ import { type ReactNode } from 'react';
 import { MenuComponent } from './MenuComponent';
 import { type UseMenuOptions } from './useMenu';
 
-export interface MenuSubProps extends UseMenuOptions {
+export type MenuSubProps = {
   children: ReactNode;
-}
+} & UseMenuOptions;
 
-export function MenuSub(props: MenuSubProps) {
+export const MenuSub = (props: MenuSubProps) => {
   const {
     placement = 'right-start',
     trigger = 'hover',
@@ -20,5 +20,7 @@ export function MenuSub(props: MenuSubProps) {
       {children}
     </MenuComponent>
   );
-}
+};
+
+MenuSub.displayName = 'MenuSub';
 

@@ -4,9 +4,9 @@ import { FloatingNode } from '@floating-ui/react';
 import { MenuContextProvider } from './Menu.context';
 import { useMenu, type UseMenuOptions } from './useMenu';
 
-interface MenuComponentProps extends UseMenuOptions {
+type MenuComponentProps = {
   children: ReactNode;
-}
+} & UseMenuOptions;
 
 export function MenuComponent(props: MenuComponentProps) {
   const {
@@ -51,8 +51,7 @@ export function MenuComponent(props: MenuComponentProps) {
           elementsRef: menu.elementsRef,
           labelsRef: menu.labelsRef,
           activeIndex: menu.activeIndex,
-          setActiveIndex: menu.setActiveIndex,
-          setHasFocusInside: menu.setHasFocusInside
+          setActiveIndex: menu.setActiveIndex
         }}
       >
         {children}

@@ -2,43 +2,35 @@ import {
   cloneElement,
   forwardRef,
   isValidElement,
+  type ComponentPropsWithoutRef,
   type ReactNode
 } from 'react';
 import { useMergeRefs } from '@floating-ui/react';
 
+import { polymorphicForwardRef } from '../../../lib/forward-ref';
 import { usePopoverContext } from './Popover.context';
 
-export interface PopoverTriggerProps {
+export type PopoverTriggerProps = {
   children: ReactNode;
-}
+} & ComponentPropsWithoutRef<'button'>;
 
-export const PopoverTrigger = forwardRef<HTMLElement, PopoverTriggerProps>(
-  (props, ref) => {
-    const { children } = props;
+export const PopoverTrigger = polymorphicForwardRef<
+  'button',
+  PopoverTriggerProps
+>((props, ref) => {
+  const { children, as: Component = 'button', ...rest } = props;
 
-    if (!isValidElement(children)) {
-      throw new Error(
-        'Popover.Trigger component children should be an element or a component that accepts ref.'
-      );
-    }
+  const context = usePopoverContext();
+  const triggerRef = useMergeRefs([context.reference, ref]);
 
-    const context = usePopoverContext();
-    const triggerRef = useMergeRefs([
-      context.reference,
-      ref,
-      (children as any).ref
-    ]);
+  const triggerProps = {
+    ref: triggerRef,
+    'data-state': context.open ? 'open' : 'closed',
+    ...context.interactions.getReferenceProps(rest)
+  };
 
-    return cloneElement(
-      children,
-      context.interactions.getReferenceProps({
-        ref: triggerRef,
-        'data-state': context.open ? 'open' : 'closed',
-        ...children.props
-      })
-    );
-  }
-);
+  return <Component {...triggerProps}>{children}</Component>;
+});
 
 PopoverTrigger.displayName = 'Popover.Trigger';
 

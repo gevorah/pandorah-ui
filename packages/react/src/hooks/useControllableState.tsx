@@ -7,11 +7,11 @@ import {
 
 import { useCallbackRef } from './useCallbackRef';
 
-interface UseControllableStateOptions<T> {
+type UseControllableStateOptions<T> = {
   value?: T;
   defaultValue: T;
   onChange?: (value: T) => void;
-}
+};
 
 export function useControllableState<T>(
   options: UseControllableStateOptions<T>

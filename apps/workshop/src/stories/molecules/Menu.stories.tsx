@@ -3,10 +3,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Menu> = {
   title: 'Molecules/Menu',
-  component: Menu,
+  component: Menu.Root,
   subcomponents: {
     'Menu.Trigger': Menu.Trigger as any,
-    'Menu.List': Menu.List as any
+    'Menu.List': Menu.List as any,
+    'Menu.Item': Menu.Item as any
   },
   parameters: {
     layout: 'centered'
@@ -42,16 +43,18 @@ type Story = StoryObj<typeof meta>;
 
 const Template: Story = {
   render: (args) => (
-    <Menu {...args}>
-      <Menu.Trigger>
-        <Button>Menu</Button>
+    <Menu.Root {...args}>
+      <Menu.Trigger as={Button} variant="solid">
+        Menu
       </Menu.Trigger>
       <Menu.List className="flex flex-col rounded-lg bg-white p-2 shadow-md">
         <Menu.Item>Lorem</Menu.Item>
-        <Menu.Item>Ipsum</Menu.Item>
-        <Menu.Item>Dolor</Menu.Item>
+        <Menu.Item as={Button} type="button" variant="ghost" size="sm">
+          Ipsum
+        </Menu.Item>
+        <Menu.Item disabled>Dolor</Menu.Item>
       </Menu.List>
-    </Menu>
+    </Menu.Root>
   )
 };
 

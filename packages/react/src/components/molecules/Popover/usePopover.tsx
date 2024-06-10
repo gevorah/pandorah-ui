@@ -11,13 +11,13 @@ import {
 import { usePopup, type UsePopupOptions } from '../Popup';
 import { type UsePopupReturn } from '../Popup/usePopup';
 
-export interface UsePopoverOptions extends Omit<UsePopupOptions, 'nodeId'> {
+export type UsePopoverOptions = {
   trigger?: 'click' | 'hover';
-}
+} & Omit<UsePopupOptions, 'nodeId'>;
 
-export interface UsePopoverReturn extends UsePopupReturn {
+export type UsePopoverReturn = {
   interactions: UseInteractionsReturn;
-}
+} & UsePopupReturn;
 
 export function usePopover(options: UsePopoverOptions): UsePopoverReturn {
   const { trigger = 'click', ...popup } = options;

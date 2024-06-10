@@ -22,7 +22,7 @@ function calculateOffset(offset: OffsetOptions, arrow: SVGSVGElement | null) {
   return offset;
 }
 
-export interface UsePopupOptions {
+export type UsePopupOptions = {
   placement?: Placement;
   strategy?: Strategy;
   middleware?: Array<Middleware | null | undefined | false>;
@@ -31,14 +31,14 @@ export interface UsePopupOptions {
   onOpenChange?: (open: boolean) => void;
   nodeId?: string;
   offset?: OffsetOptions;
-}
+};
 
-export interface UsePopupReturn {
+export type UsePopupReturn = {
   floating: UseFloatingReturn;
   open: boolean;
   setOpen: (open: boolean) => void;
   arrowRef: MutableRefObject<SVGSVGElement | null>;
-}
+};
 
 export function usePopup(options: UsePopupOptions): UsePopupReturn {
   const {

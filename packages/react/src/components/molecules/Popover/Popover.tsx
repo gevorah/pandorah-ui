@@ -6,9 +6,9 @@ import { PopoverContent } from './PopoverContent';
 import { PopoverTrigger } from './PopoverTrigger';
 import { usePopover, type UsePopoverOptions } from './usePopover';
 
-export interface PopoverProps extends UsePopoverOptions {
+export type PopoverProps = {
   children: ReactNode;
-}
+} & UsePopoverOptions;
 
 export function Popover(props: PopoverProps) {
   const {

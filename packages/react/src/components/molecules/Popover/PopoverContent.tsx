@@ -7,7 +7,7 @@ import {
 
 import { usePopoverContext } from './Popover.context';
 
-export interface PopoverContentProps extends ComponentPropsWithoutRef<'div'> {}
+export type PopoverContentProps = {} & ComponentPropsWithoutRef<'div'>;
 
 export const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
   (props, ref) => {

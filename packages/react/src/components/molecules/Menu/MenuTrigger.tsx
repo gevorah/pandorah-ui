@@ -1,42 +1,29 @@
-import {
-  cloneElement,
-  forwardRef,
-  isValidElement,
-  type ReactNode
-} from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { useMergeRefs } from '@floating-ui/react';
 
+import { polymorphicForwardRef } from '../../../lib/forward-ref';
 import { useMenuContext } from './Menu.context';
 
-export interface MenuTriggerProps {
+export type MenuTriggerProps = {
   children: ReactNode;
-}
+} & ComponentPropsWithoutRef<'button'>;
 
-export const MenuTrigger = forwardRef<HTMLElement, MenuTriggerProps>(
+export const MenuTrigger = polymorphicForwardRef<'button', MenuTriggerProps>(
   (props, ref) => {
-    const { children } = props;
-
-    if (!isValidElement(children)) {
-      throw new Error(
-        'Menu.Trigger component children should be an element or a component that accepts ref.'
-      );
-    }
+    const { children, as: Component = 'button', ...rest } = props;
 
     const context = useMenuContext();
-    const triggerRef = useMergeRefs([
-      context.reference,
-      ref,
-      (children as any).ref
-    ]);
+    const triggerRef = useMergeRefs([context.reference, ref]);
 
-    return cloneElement(
-      children,
-      context.interactions.getReferenceProps({
-        ref: triggerRef,
-        'data-state': context.open ? 'open' : 'closed',
-        ...children.props
-      })
-    );
+    const triggerProps = {
+      ref: triggerRef,
+      'data-state': context.open ? 'open' : 'closed',
+      ...context.interactions.getReferenceProps(rest)
+    };
+
+    return <Component {...triggerProps}>{children}</Component>;
   }
 );
+
+MenuTrigger.displayName = 'MenuTrigger';
 

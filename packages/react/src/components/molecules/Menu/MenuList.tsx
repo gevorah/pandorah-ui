@@ -8,7 +8,7 @@ import {
 
 import { useMenuContext } from './Menu.context';
 
-export interface MenuListProps extends ComponentPropsWithoutRef<'div'> {}
+export type MenuListProps = {} & ComponentPropsWithoutRef<'div'>;
 
 export const MenuList = forwardRef<HTMLDivElement, MenuListProps>(
   (props, ref) => {
@@ -41,4 +41,6 @@ export const MenuList = forwardRef<HTMLDivElement, MenuListProps>(
     );
   }
 );
+
+MenuList.displayName = 'MenuList';
 
