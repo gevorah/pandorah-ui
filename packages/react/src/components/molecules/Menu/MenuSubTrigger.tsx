@@ -1,22 +1,17 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FocusEvent,
-  type ReactNode
-} from 'react';
+import { type FocusEvent } from 'react';
 import { useListItem, useMergeRefs } from '@floating-ui/react';
 
 import { polymorphicForwardRef } from '../../../lib/forward-ref';
+import type { PolymorphicProps } from '../../../types/polymorphic';
 import { useMenuContext } from './Menu.context';
 
-export type MenuSubTriggerProps = {
-  children: ReactNode;
-} & ComponentPropsWithoutRef<'button'>;
+export type MenuSubTriggerProps = PolymorphicProps<'button'>;
 
 export const MenuSubTrigger = polymorphicForwardRef<
   'button',
   MenuSubTriggerProps
 >((props, ref) => {
-  const { children, as: Component = 'button', ...rest } = props;
+  const { as: Component = 'button', children, ...rest } = props;
 
   const context = useMenuContext();
   const item = useListItem();
@@ -35,6 +30,7 @@ export const MenuSubTrigger = polymorphicForwardRef<
     'data-state': context.open ? 'open' : 'closed',
     ...context.interactions.getReferenceProps(
       context.interactions.getItemProps({
+        ...rest,
         onFocus
       })
     )

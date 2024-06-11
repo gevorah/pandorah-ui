@@ -1,16 +1,13 @@
 import { useRef, type ReactNode } from 'react';
 
 import { PopoverContextProvider } from './Popover.context';
-import { PopoverArrow } from './PopoverArrow';
-import { PopoverContent } from './PopoverContent';
-import { PopoverTrigger } from './PopoverTrigger';
 import { usePopover, type UsePopoverOptions } from './usePopover';
 
 export type PopoverProps = {
   children: ReactNode;
 } & UsePopoverOptions;
 
-export function Popover(props: PopoverProps) {
+export const Popover = (props: PopoverProps) => {
   const {
     placement = 'bottom',
     strategy = 'absolute',
@@ -54,10 +51,7 @@ export function Popover(props: PopoverProps) {
       {children}
     </PopoverContextProvider>
   );
-}
+};
 
-Popover.Trigger = PopoverTrigger;
-Popover.Content = PopoverContent;
-Popover.Arrow = PopoverArrow;
 Popover.displayName = 'Popover';
 

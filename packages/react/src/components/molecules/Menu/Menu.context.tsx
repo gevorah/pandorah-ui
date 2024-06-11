@@ -26,7 +26,7 @@ export type MenuContextValue = {
   open: boolean;
   setOpen: (open: boolean) => void;
   interactions: UseInteractionsReturn;
-  arrowRef: Element | MutableRefObject<Element | null>;
+  arrowRef: MutableRefObject<SVGSVGElement | null>;
 
   elementsRef: MutableRefObject<Array<HTMLElement | null>>;
   labelsRef: MutableRefObject<Array<string | null>>;

@@ -1,19 +1,17 @@
 import {
   type ComponentPropsWithoutRef,
   type FocusEvent,
-  type MouseEvent,
-  type ReactNode
+  type MouseEvent
 } from 'react';
 import { useFloatingTree, useListItem, useMergeRefs } from '@floating-ui/react';
 
 import { polymorphicForwardRef } from '../../../lib/forward-ref';
+import type { PolymorphicProps } from '../../../types/polymorphic';
 import { useMenuContext } from './Menu.context';
 
 export type MenuItemProps = {
-  children?: ReactNode;
-  disabled?: boolean;
   label?: string;
-} & ComponentPropsWithoutRef<'button'>;
+} & PolymorphicProps<'button'>;
 
 export const MenuItem = polymorphicForwardRef<'button', MenuItemProps>(
   (props, ref) => {
@@ -35,12 +33,12 @@ export const MenuItem = polymorphicForwardRef<'button', MenuItemProps>(
 
     const itemRef = useMergeRefs([item.ref, ref]);
 
-    const onClick = (event: MouseEvent<any>) => {
+    const onClick = (event: MouseEvent<HTMLButtonElement>) => {
       rest.onClick?.(event);
       tree?.events.emit('click');
     };
 
-    const onFocus = (event: FocusEvent<any>) => {
+    const onFocus = (event: FocusEvent<HTMLButtonElement>) => {
       rest.onFocus?.(event);
     };
 

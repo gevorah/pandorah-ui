@@ -1,19 +1,19 @@
 import { FloatingArrow } from '@floating-ui/react';
 
 import { cn } from '../../../lib/utils';
-import { usePopoverContext } from './Popover.context';
+import { useMenuContext } from './Menu.context';
 
-export type PopoverArrowProps = {
+export type MenuArrowProps = {
   className?: string;
   width?: number;
   height?: number;
   tipRadius?: number;
 };
 
-export const PopoverArrow = (props: PopoverArrowProps) => {
+export const MenuArrow = (props: MenuArrowProps) => {
   const { className, width = 16, height = 8, tipRadius = 2 } = props;
 
-  const { context: floatingContext, arrowRef } = usePopoverContext();
+  const { context: floatingContext, arrowRef } = useMenuContext();
 
   return (
     <FloatingArrow
@@ -27,5 +27,5 @@ export const PopoverArrow = (props: PopoverArrowProps) => {
   );
 };
 
-PopoverArrow.displayName = 'PopoverArrow';
+MenuArrow.displayName = 'MenuArrow';
 

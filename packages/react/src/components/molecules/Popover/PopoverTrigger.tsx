@@ -18,7 +18,7 @@ export const PopoverTrigger = polymorphicForwardRef<
   'button',
   PopoverTriggerProps
 >((props, ref) => {
-  const { children, as: Component = 'button', ...rest } = props;
+  const { as: Component = 'button', children, ...rest } = props;
 
   const context = usePopoverContext();
   const triggerRef = useMergeRefs([context.reference, ref]);

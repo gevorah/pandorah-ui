@@ -38,7 +38,7 @@ export type UseMenuReturn = {
   setActiveIndex: Dispatch<SetStateAction<number | null>>;
 } & UsePopupReturn;
 
-export function useMenu(options: UseMenuOptions): UseMenuReturn {
+export const useMenu = (options: UseMenuOptions): UseMenuReturn => {
   const { trigger = 'click', ...popup } = options;
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -142,5 +142,5 @@ export function useMenu(options: UseMenuOptions): UseMenuReturn {
       setActiveIndex
     ]
   );
-}
+};
 

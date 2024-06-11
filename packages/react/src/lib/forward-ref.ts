@@ -6,9 +6,9 @@ import type {
   PolymorphicProps
 } from '../types/polymorphic';
 
-export function polymorphicForwardRef<C extends As, Props = {}>(
-  render: ForwardRefRenderFunction<Element, PolymorphicProps<C, Props>>
+export function polymorphicForwardRef<Component extends As, Props = {}>(
+  render: ForwardRefRenderFunction<any, PolymorphicProps<Component, Props>>
 ) {
-  return forwardRef(render) as PolymorphicComponent<C, Props>;
+  return forwardRef(render) as PolymorphicComponent<Component, Props>;
 }
 
