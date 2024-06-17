@@ -2,17 +2,17 @@ import { useMergeRefs } from '@floating-ui/react';
 
 import { polymorphicForwardRef } from '../../../lib/forward-ref';
 import type { PolymorphicProps } from '../../../types/polymorphic';
-import { usePopoverContext } from './Popover.context';
+import { useTooltipContext } from './Tooltip.context';
 
-export type PopoverTriggerProps = PolymorphicProps<'button'>;
+export type TooltipTriggerProps = PolymorphicProps<'button'>;
 
-export const PopoverTrigger = polymorphicForwardRef<
+export const TooltipTrigger = polymorphicForwardRef<
   'button',
-  PopoverTriggerProps
+  TooltipTriggerProps
 >((props, ref) => {
   const { as: Component = 'button', children, ...rest } = props;
 
-  const context = usePopoverContext();
+  const context = useTooltipContext();
   const triggerRef = useMergeRefs([context.reference, ref]);
 
   const triggerProps = {
@@ -24,5 +24,5 @@ export const PopoverTrigger = polymorphicForwardRef<
   return <Component {...triggerProps}>{children}</Component>;
 });
 
-PopoverTrigger.displayName = 'PopoverTrigger';
+TooltipTrigger.displayName = 'TooltipTrigger';
 

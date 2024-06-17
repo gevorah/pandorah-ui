@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { PopoverContextProvider } from './Popover.context';
 import { usePopover, type UsePopoverOptions } from './usePopover';

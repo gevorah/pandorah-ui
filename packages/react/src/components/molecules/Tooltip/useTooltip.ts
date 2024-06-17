@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import {
-  useClick,
   useDismiss,
+  useFocus,
   useHover,
   useInteractions,
   useRole,
@@ -10,34 +10,32 @@ import {
 
 import { usePopup, type UsePopupOptions, type UsePopupReturn } from '../Popup';
 
-export type UsePopoverOptions = {
-  trigger?: 'click' | 'hover';
-} & Omit<UsePopupOptions, 'nodeId'>;
+export type UseTooltipOptions = {} & Omit<UsePopupOptions, 'nodeId'>;
 
-export type UsePopoverReturn = {
+export type UseTooltipReturn = {
   interactions: UseInteractionsReturn;
 } & UsePopupReturn;
 
-export function usePopover(options: UsePopoverOptions): UsePopoverReturn {
-  const { trigger = 'click', ...popup } = options;
+export const useTooltip = (options: UseTooltipOptions): UseTooltipReturn => {
+  const { ...popup } = options;
 
   const { floating, open, setOpen, arrowRef } = usePopup(popup);
 
-  const click = useClick(floating.context, {
-    enabled: trigger === 'click'
-  });
   const hover = useHover(floating.context, {
-    enabled: trigger === 'hover',
-    delay: { open: 0, close: 100 }
+    enabled: !options.open,
+    move: false
+  });
+  const focus = useFocus(floating.context, {
+    enabled: !options.open
   });
   const dismiss = useDismiss(floating.context);
-  const role = useRole(floating.context, { role: 'dialog' });
+  const role = useRole(floating.context, { role: 'tooltip' });
 
-  const interactions = useInteractions([click, hover, dismiss, role]);
+  const interactions = useInteractions([hover, focus, dismiss, role]);
 
   return useMemo(
     () => ({ floating, open, setOpen, interactions, arrowRef }),
     [floating, open, setOpen, interactions, arrowRef]
   );
-}
+};
 

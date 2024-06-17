@@ -14,3 +14,5 @@ export const MenuLabel = forwardRef<HTMLParagraphElement, MenuLabelProps>(
   }
 );
 
+MenuLabel.displayName = 'MenuLabel';
+

@@ -22,8 +22,7 @@ import {
   type UseInteractionsReturn
 } from '@floating-ui/react';
 
-import { usePopup, type UsePopupOptions } from '../Popup';
-import type { UsePopupReturn } from '../Popup/usePopup';
+import { usePopup, type UsePopupOptions, type UsePopupReturn } from '../Popup';
 
 export type UseMenuOptions = {
   trigger?: 'click' | 'hover';

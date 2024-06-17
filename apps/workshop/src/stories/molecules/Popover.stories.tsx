@@ -1,12 +1,13 @@
 import { Button, Popover } from '@pandorah-ui/react';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Popover> = {
+const meta: Meta<typeof Popover.Root> = {
   title: 'Molecules/Popover',
-  component: Popover,
+  component: Popover.Root,
   subcomponents: {
     'Popover.Trigger': Popover.Trigger as any,
-    'Popover.Content': Popover.Content as any
+    'Popover.Content': Popover.Content as any,
+    'Popover.Arrow': Popover.Arrow as any
   },
   parameters: {
     layout: 'centered'
@@ -42,13 +43,13 @@ type Story = StoryObj<typeof meta>;
 
 const Template: Story = {
   render: (args) => (
-    <Popover {...args}>
+    <Popover.Root {...args}>
       <Popover.Trigger as={Button}>Trigger</Popover.Trigger>
-      <Popover.Content className="rounded-lg bg-white p-2 shadow-md">
+      <Popover.Content className="min-w-36 rounded-md bg-white p-1.5 shadow-md">
         <div>Content</div>
         <Popover.Arrow />
       </Popover.Content>
-    </Popover>
+    </Popover.Root>
   )
 };
 

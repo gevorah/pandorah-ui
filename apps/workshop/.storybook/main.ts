@@ -6,18 +6,20 @@ function getAbsolutePath(value: string): any {
 }
 
 const config: StorybookConfig = {
+  framework: {
+    name: getAbsolutePath('@storybook/react-vite'),
+    options: {}
+  },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     getAbsolutePath('@storybook/addon-links'),
     getAbsolutePath('@storybook/addon-essentials'),
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-interactions'),
-    getAbsolutePath('@storybook/addon-themes')
-  ],
-  framework: {
-    name: getAbsolutePath('@storybook/react-vite'),
-    options: {}
-  }
+    getAbsolutePath('@storybook/addon-themes'),
+    getAbsolutePath('@storybook/addon-a11y')
+  ]
 };
+
 export default config;
 

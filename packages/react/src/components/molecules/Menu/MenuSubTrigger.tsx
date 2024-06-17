@@ -39,3 +39,5 @@ export const MenuSubTrigger = polymorphicForwardRef<
   return <Component {...subTriggerProps}>{children}</Component>;
 });
 
+MenuSubTrigger.displayName = 'MenuSubTrigger';
+

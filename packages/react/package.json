@@ -2,18 +2,22 @@
   "name": "@pandorah-ui/react",
   "version": "0.0.0",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+        "default" :"./dist/index.js"
+    },
     "./styles.css": "./dist/index.css"
   },
   "scripts": {
-    "build": "tsup && tailwindcss -i ./src/index.css -o ./dist/index.css --minify",
-    "dev": "tsup --watch && tailwindcss -i ./src/index.css -o ./dist/index.css --watch",
+    "build": "tsup && pnpm run build:tailwind",
+    "dev": "tsup --watch && pnpm run dev:tailwind",
+    "build:tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css --minify",
+    "dev:tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css --watch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {

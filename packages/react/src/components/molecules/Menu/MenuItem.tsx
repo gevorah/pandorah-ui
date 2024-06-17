@@ -1,8 +1,4 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FocusEvent,
-  type MouseEvent
-} from 'react';
+import { type FocusEvent, type MouseEvent } from 'react';
 import { useFloatingTree, useListItem, useMergeRefs } from '@floating-ui/react';
 
 import { polymorphicForwardRef } from '../../../lib/forward-ref';
