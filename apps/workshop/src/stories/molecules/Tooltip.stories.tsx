@@ -6,8 +6,8 @@ const meta: Meta<typeof Tooltip.Root> = {
   component: Tooltip.Root,
   subcomponents: {
     'Tooltip.Trigger': Tooltip.Trigger as any,
-    'Tooltip.Content': Tooltip.Content as any
-    // 'Tooltip.Arrow': Tooltip.Arrow as any
+    'Tooltip.Content': Tooltip.Content as any,
+    'Tooltip.Arrow': Tooltip.Arrow as any
   },
   parameters: {
     layout: 'centered'
@@ -45,9 +45,9 @@ const Template: Story = {
   render: (args) => (
     <Tooltip.Root {...args}>
       <Tooltip.Trigger as={Button}>Trigger</Tooltip.Trigger>
-      <Tooltip.Content className="rounded-md bg-neutral-600 p-1.5 shadow-md">
+      <Tooltip.Content className="rounded-md bg-black px-1.5 py-0.5 text-sm text-white shadow-md">
         <span>Tooltip</span>
-        {/* <Tooltip.Arrow /> */}
+        <Tooltip.Arrow className="fill-black" />
       </Tooltip.Content>
     </Tooltip.Root>
   )

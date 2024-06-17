@@ -7,7 +7,7 @@ export type TooltipContentProps = {} & ComponentPropsWithoutRef<'div'>;
 
 export const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
   (props, ref) => {
-    const { children, style, ...rest } = props;
+    const { children, className, style, ...rest } = props;
 
     const { context: floatingContext, ...context } = useTooltipContext();
     const contentRef = useMergeRefs([context.floating, ref]);
@@ -19,6 +19,7 @@ export const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
         <div
           ref={contentRef}
           data-placement={context.placement}
+          className={className}
           style={{ ...context.floatingStyles, ...style }}
           {...context.interactions.getFloatingProps(rest)}
         >

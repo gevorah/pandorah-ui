@@ -2,15 +2,14 @@
   "name": "@pandorah-ui/react",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
-    ".": {
-        "default" :"./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./styles.css": "./dist/index.css"
   },
   "scripts": {

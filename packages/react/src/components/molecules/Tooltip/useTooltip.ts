@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import {
+  safePolygon,
   useDismiss,
   useFocus,
   useHover,
@@ -23,7 +24,9 @@ export const useTooltip = (options: UseTooltipOptions): UseTooltipReturn => {
 
   const hover = useHover(floating.context, {
     enabled: !options.open,
-    move: false
+    move: false,
+    delay: { open: 0, close: 100 },
+    handleClose: safePolygon({ blockPointerEvents: true })
   });
   const focus = useFocus(floating.context, {
     enabled: !options.open
