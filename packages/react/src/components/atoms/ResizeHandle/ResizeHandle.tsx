@@ -1,7 +1,7 @@
 import { forwardRef, type ComponentPropsWithoutRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 
 const resizeHandleVariants = cva(
   ['absolute block h-2 w-2 border border-white bg-blue-500'],
@@ -27,7 +27,7 @@ export type ResizeHandleProps = {} & ComponentPropsWithoutRef<'div'> &
 
 export const ResizeHandle = forwardRef<HTMLDivElement, ResizeHandleProps>(
   (props, ref) => {
-    const { className, direction, ...rest } = props;
+    const { direction, className, ...rest } = props;
 
     return (
       <div

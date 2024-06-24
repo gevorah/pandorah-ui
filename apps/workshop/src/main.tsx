@@ -1,3 +1,6 @@
+import './index.css';
+import '@pandorah-ui/react/styles.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
