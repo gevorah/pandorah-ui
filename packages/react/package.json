@@ -4,7 +4,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
@@ -21,10 +23,10 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.16",
-    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "react-dropzone": "^14.2.3",
     "tailwind-merge": "^2.3.0",
+    "tailwind-variants": "^0.2.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {

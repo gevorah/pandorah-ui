@@ -21,6 +21,6 @@ export default {
   ],
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   tailwindAttributes: ['class'],
-  tailwindFunctions: ['cn', 'cva']
+  tailwindFunctions: ['cn', 'tv']
 };
 
