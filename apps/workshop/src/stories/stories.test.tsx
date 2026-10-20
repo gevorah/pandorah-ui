@@ -1,12 +1,20 @@
+import {
+  Button,
+  DialogTrigger,
+  Popover,
+  Tooltip,
+  TooltipTrigger,
+} from '@pandorah-ui/react';
+import { composeStories } from '@storybook/react';
+import { clearAllMocks } from '@storybook/test';
 import { createRef, type ReactElement } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot, type Root } from 'react-dom/client';
-import { Button, Tooltip, TooltipTrigger } from '@pandorah-ui/react';
-import { composeStories } from '@storybook/react';
-import { clearAllMocks } from '@storybook/test';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import * as ButtonStories from './atoms/Button.stories';
+import * as MenuStories from './molecules/Menu.stories';
+import * as PopoverStories from './molecules/Popover.stories';
 import * as TooltipStories from './molecules/Tooltip.stories';
 
 let container: HTMLDivElement;
@@ -29,10 +37,12 @@ afterEach(() => {
 
 describe.each([
   ['Button', composeStories(ButtonStories)],
-  ['Tooltip', composeStories(TooltipStories)]
+  ['Tooltip', composeStories(TooltipStories)],
+  ['Popover', composeStories(PopoverStories)],
+  ['Menu', composeStories(MenuStories)],
 ])('%s stories', (_, stories) => {
   const storiesWithPlay = Object.entries(stories).filter(
-    ([, Story]) => Story.play
+    ([, Story]) => Story.play,
   );
 
   it.each(storiesWithPlay)('%s', async (_, Story) => {
@@ -47,7 +57,7 @@ describe('Button', () => {
     render(
       <Button ref={ref} data-testid="save" aria-label="Save draft">
         Save
-      </Button>
+      </Button>,
     );
     // @ts-expect-error
     void (<Button ref={createRef<HTMLDivElement>()}>Save</Button>);
@@ -68,7 +78,7 @@ describe('Button', () => {
         className={({ isDisabled }) => (isDisabled ? 'muted' : 'custom')}
       >
         Save
-      </Button>
+      </Button>,
     );
 
     const [moduleClass, ...rest] = ref.current?.classList ?? [];
@@ -86,10 +96,27 @@ describe('Tooltip', () => {
       <TooltipTrigger isOpen>
         <Button>Save</Button>
         <Tooltip ref={ref}>Save changes</Tooltip>
-      </TooltipTrigger>
+      </TooltipTrigger>,
     );
 
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
     expect(ref.current?.getAttribute('role')).toBe('tooltip');
+  });
+});
+
+describe('Popover', () => {
+  it('passes the ref prop to the popover element', () => {
+    const ref = createRef<HTMLElement>();
+    render(
+      <DialogTrigger isOpen>
+        <Button>Share</Button>
+        <Popover ref={ref} aria-label="Share">
+          Content
+        </Popover>
+      </DialogTrigger>,
+    );
+
+    expect(ref.current).toBeInstanceOf(HTMLElement);
+    expect(ref.current?.getAttribute('role')).toBe('dialog');
   });
 });

@@ -32,6 +32,7 @@
   --color-background-accent-subtle-pressed: var(--color-violet-2);
   --color-background-disabled: var(--color-gray-1);
   --color-background-inverse: var(--color-gray-9);
+  --color-background-surface: var(--color-white);
 
   --color-text-primary: var(--color-gray-9);
   --color-text-accent: var(--color-violet-7);
@@ -40,6 +41,7 @@
   --color-text-disabled: var(--color-gray-4);
 
   --color-border-accent: var(--color-violet-6);
+  --color-border-subtle: var(--color-gray-2);
   --color-border-disabled: var(--color-gray-2);
   --color-border-focus: var(--color-violet-6);
 

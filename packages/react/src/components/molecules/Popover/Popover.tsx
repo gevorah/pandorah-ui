@@ -1,57 +1,51 @@
-import { type ReactNode } from 'react';
+'use client';
 
-import { PopoverContextProvider } from './Popover.context';
-import { usePopover, type UsePopoverOptions } from './usePopover';
+import type { Ref } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import {
+  Popover as AriaPopover,
+  OverlayArrow,
+  type PopoverProps as AriaPopoverProps,
+} from 'react-aria-components/Popover';
 
-export type PopoverProps = {
-  children: ReactNode;
-} & UsePopoverOptions;
+import styles from './Popover.module.css';
 
-export const Popover = (props: PopoverProps) => {
-  const {
-    placement = 'bottom',
-    strategy = 'absolute',
-    middleware,
-    defaultOpen = false,
-    open,
-    onOpenChange,
-    offset = 0,
-    children,
-    trigger
-  } = props;
-
-  const popover = usePopover({
-    placement,
-    strategy,
-    middleware,
-    defaultOpen,
-    open,
-    onOpenChange,
-    offset,
-    trigger
-  });
-
-  return (
-    <PopoverContextProvider
-      value={{
-        context: popover.floating.context,
-        placement: popover.floating.placement,
-        strategy: popover.floating.strategy,
-        x: popover.floating.x,
-        y: popover.floating.y,
-        floatingStyles: popover.floating.floatingStyles,
-        reference: popover.floating.refs.setReference,
-        floating: popover.floating.refs.setFloating,
-        open: popover.open,
-        setOpen: popover.setOpen,
-        interactions: popover.interactions,
-        arrowRef: popover.arrowRef
-      }}
-    >
-      {children}
-    </PopoverContextProvider>
-  );
+export type PopoverProps = AriaPopoverProps & {
+  ref?: Ref<HTMLElement>;
+  showArrow?: boolean;
 };
 
-Popover.displayName = 'Popover';
-
+export function Popover({
+  className,
+  children,
+  showArrow = false,
+  ...props
+}: PopoverProps) {
+  return (
+    <AriaPopover
+      {...props}
+      className={composeRenderProps(className, (className) =>
+        className ? `${styles.popover} ${className}` : styles.popover,
+      )}
+    >
+      {composeRenderProps(children, (children) => (
+        <>
+          {showArrow && (
+            <OverlayArrow>
+              <svg
+                width={12}
+                height={12}
+                viewBox="0 0 12 12"
+                aria-hidden="true"
+                className={styles.arrow}
+              >
+                <path d="M0 0 L6 6 L12 0" />
+              </svg>
+            </OverlayArrow>
+          )}
+          {children}
+        </>
+      ))}
+    </AriaPopover>
+  );
+}

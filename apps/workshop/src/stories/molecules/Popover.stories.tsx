@@ -1,61 +1,122 @@
-import { Button, Popover } from '@pandorah-ui/react';
+import {
+  Button,
+  DialogTrigger,
+  Popover,
+  PreviewTrigger,
+  type DialogTriggerProps,
+  type PopoverProps,
+} from '@pandorah-ui/react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
 
-const meta: Meta<typeof Popover.Root> = {
+type PopoverStoryArgs = Omit<PopoverProps, 'children' | 'isOpen'> &
+  Pick<DialogTriggerProps, 'isOpen'>;
+
+const meta = {
   title: 'Molecules/Popover',
-  component: Popover.Root,
-  subcomponents: {
-    'Popover.Trigger': Popover.Trigger as any,
-    'Popover.Content': Popover.Content as any,
-    'Popover.Arrow': Popover.Arrow as any
-  },
+  component: Popover,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
     placement: {
       options: [
-        'bottom',
-        'bottom-end',
-        'bottom-start',
-        'left',
-        'left-end',
-        'left-start',
-        'right',
-        'right-end',
-        'right-start',
         'top',
-        'top-end',
-        'top-start'
+        'top start',
+        'top end',
+        'bottom',
+        'bottom start',
+        'bottom end',
+        'left',
+        'right',
+        'start',
+        'end',
       ],
-      control: { type: 'select' }
+      control: { type: 'select' },
     },
-    children: {
-      control: { disable: true }
-    }
-  }
-};
+    showArrow: { control: 'boolean' },
+  },
+  args: {
+    placement: 'bottom',
+    showArrow: false,
+    'aria-label': 'Share',
+  },
+  render: ({ isOpen, ...popoverProps }) => (
+    <DialogTrigger isOpen={isOpen}>
+      <Button variant="outline">Share</Button>
+      <Popover {...popoverProps}>
+        <p style={{ margin: 0 }}>Anyone with the link can view.</p>
+        <Button size="sm" style={{ marginTop: '0.75rem' }}>
+          Copy link
+        </Button>
+      </Popover>
+    </DialogTrigger>
+  ),
+} satisfies Meta<PopoverStoryArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const Template: Story = {
-  render: (args) => (
-    <Popover.Root {...args}>
-      <Popover.Trigger as={Button}>Trigger</Popover.Trigger>
-      <Popover.Content className="min-w-36 rounded-md bg-white p-1.5 shadow-md">
-        <div>Content</div>
-        <Popover.Arrow />
-      </Popover.Content>
-    </Popover.Root>
-  )
+export const Default: Story = {};
+
+export const Interactions: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const trigger = canvas.getByRole('button', { name: 'Share' });
+
+    await userEvent.click(trigger);
+    const dialog = await page.findByRole('dialog', { name: 'Share' });
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await waitFor(() =>
+      expect(dialog).toContainElement(document.activeElement as HTMLElement),
+    );
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+    await waitFor(() => expect(trigger).toHaveFocus());
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await userEvent.keyboard('{Enter}');
+    await page.findByRole('dialog', { name: 'Share' });
+    await userEvent.tab();
+    await expect(page.getByRole('button', { name: 'Copy link' })).toHaveFocus();
+
+    await userEvent.click(canvasElement.ownerDocument.body);
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+  },
 };
 
-export const Default: Story = {
-  ...Template,
+export const WithArrow: Story = {
   args: {
-    placement: 'bottom'
-  }
+    isOpen: true,
+    showArrow: true,
+  },
+};
+
+export const Preview: Story = {
+  render: (args) => (
+    <PreviewTrigger delay={0} closeDelay={0}>
+      <Button variant="ghost">Release notes</Button>
+      <Popover {...args} aria-label="Release notes preview">
+        <p style={{ margin: 0 }}>Version 2.0 adds dark mode.</p>
+      </Popover>
+    </PreviewTrigger>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const trigger = canvas.getByRole('button', { name: 'Release notes' });
+
+    await userEvent.pointer({ target: canvasElement });
+    await userEvent.hover(trigger);
+    await page.findByRole('dialog', { name: 'Release notes preview' });
+
+    await userEvent.tab();
+    await expect(trigger).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+  },
 };

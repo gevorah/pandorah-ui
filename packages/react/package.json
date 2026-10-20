@@ -23,7 +23,6 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.26.16",
     "clsx": "^2.1.1",
     "react-aria-components": "^1.22.1",
     "react-dropzone": "^14.2.3",

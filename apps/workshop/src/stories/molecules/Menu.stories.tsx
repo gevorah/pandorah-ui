@@ -1,113 +1,161 @@
-import { Button, Menu } from '@pandorah-ui/react';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  MenuSection,
+  MenuSeparator,
+  MenuTrigger,
+  SubmenuTrigger,
+} from '@pandorah-ui/react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ChevronRight } from 'lucide-react';
+import {
+  expect,
+  fn,
+  mocked,
+  userEvent,
+  waitFor,
+  within,
+} from '@storybook/test';
 
-const meta: Meta<typeof Menu.Root> = {
+const meta = {
   title: 'Molecules/Menu',
-  component: Menu.Root,
-  subcomponents: {
-    'Menu.Trigger': Menu.Trigger as any,
-    'Menu.List': Menu.List as any,
-    'Menu.Item': Menu.Item as any,
-    'Menu.Sub': Menu.Sub as any,
-    'Menu.SubTrigger': Menu.SubTrigger as any,
-    'Menu.Divider': Menu.Divider as any,
-    'Menu.Group': Menu.Group as any,
-    'Menu.Label': Menu.Label as any,
-    'Menu.Arrow': Menu.Arrow as any
-  },
+  component: Menu,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
     placement: {
-      options: [
-        'bottom',
-        'bottom-end',
-        'bottom-start',
-        'left',
-        'left-end',
-        'left-start',
-        'right',
-        'right-end',
-        'right-start',
-        'top',
-        'top-end',
-        'top-start'
-      ],
-      control: { type: 'select' }
+      options: ['bottom start', 'bottom', 'bottom end', 'top start', 'top'],
+      control: { type: 'select' },
     },
-    trigger: {
-      options: ['click', 'hover'],
-      control: { type: 'inline-radio' }
-    },
-    children: {
-      control: { disable: true }
-    }
-  }
-};
+    showArrow: { control: 'boolean' },
+  },
+  args: {
+    placement: 'bottom start',
+    onAction: fn(),
+  },
+  render: (args) => (
+    <MenuTrigger>
+      <Button>Actions</Button>
+      <Menu {...args}>
+        <MenuItem id="edit">Edit</MenuItem>
+        <MenuItem id="duplicate">Duplicate</MenuItem>
+        <MenuItem id="archive" isDisabled>
+          Archive
+        </MenuItem>
+        <SubmenuTrigger>
+          <MenuItem id="share">Share</MenuItem>
+          <Menu onAction={args.onAction}>
+            <MenuItem id="email">Email</MenuItem>
+            <MenuItem id="link">Copy link</MenuItem>
+          </Menu>
+        </SubmenuTrigger>
+        <MenuSeparator />
+        <MenuSection title="Danger zone">
+          <MenuItem id="delete">Delete</MenuItem>
+        </MenuSection>
+      </Menu>
+    </MenuTrigger>
+  ),
+} satisfies Meta<typeof Menu>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const Template: Story = {
+export const Default: Story = {};
+
+export const Interactions: Story = {
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const trigger = canvas.getByRole('button', { name: 'Actions' });
+    const item = (name: string) => page.getByRole('menuitem', { name });
+
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    await page.findByRole('menu', { name: 'Actions' });
+    await waitFor(() => expect(item('Edit')).toHaveFocus());
+
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    await expect(item('Share')).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowRight}');
+    await waitFor(() => expect(item('Email')).toHaveFocus());
+    await userEvent.keyboard('{ArrowLeft}');
+    await waitFor(() => expect(item('Share')).toHaveFocus());
+    await expect(page.getAllByRole('menu')).toHaveLength(1);
+
+    await userEvent.keyboard('Del');
+    await expect(item('Delete')).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(mocked(args.onAction!).mock.lastCall?.[0]).toBe('delete');
+    await waitFor(() => expect(page.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(trigger).toHaveFocus());
+
+    await userEvent.click(trigger);
+    await page.findByRole('menu');
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(page.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(trigger).toHaveFocus());
+
+    await userEvent.click(trigger);
+    await userEvent.click(
+      await page.findByRole('menuitem', { name: 'Duplicate' }),
+    );
+    await expect(mocked(args.onAction!).mock.lastCall?.[0]).toBe('duplicate');
+    await waitFor(() => expect(page.queryByRole('menu')).toBeNull());
+  },
+};
+
+export const Selection: Story = {
   render: (args) => (
-    <Menu.Root {...args}>
-      <Menu.Trigger as={Button} variant="solid">
-        Menu
-      </Menu.Trigger>
-      <Menu.List className="flex min-w-36 flex-col rounded-md bg-white p-1.5 shadow-md">
-        <Menu.Item className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300">
-          Item A
-        </Menu.Item>
-        <Menu.Item
-          disabled
-          className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300"
+    <MenuTrigger>
+      <Button variant="outline">View</Button>
+      <Menu {...args}>
+        <MenuSection
+          title="Panels"
+          selectionMode="multiple"
+          defaultSelectedKeys={['sidebar']}
         >
-          Item B
-        </Menu.Item>
-        <Menu.Sub>
-          <Menu.SubTrigger className="flex w-full items-center justify-between rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300 data-[state=open]:bg-neutral-300/30">
-            Submenu
-            <ChevronRight className="size-4" />
-          </Menu.SubTrigger>
-          <Menu.List className="flex min-w-36 flex-col rounded-lg bg-white p-1.5 shadow-md">
-            <Menu.Item className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300">
-              Item X
-            </Menu.Item>
-            <Menu.Item className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300">
-              Item Y
-            </Menu.Item>
-            <Menu.Item className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300">
-              Item Z
-            </Menu.Item>
-          </Menu.List>
-        </Menu.Sub>
-        <Menu.Divider />
-        <Menu.Group>
-          <Menu.Label className="pl-1.5 text-xs font-medium">
-            Group A
-          </Menu.Label>
-          <Menu.Item className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300">
-            Item A
-          </Menu.Item>
-          <Menu.Item className="flex w-full items-center rounded-md px-1.5 py-1 focus:bg-neutral-300/30 disabled:text-neutral-300">
-            Item B
-          </Menu.Item>
-        </Menu.Group>
-        <Menu.Arrow />
-      </Menu.List>
-    </Menu.Root>
-  )
-};
+          <MenuItem id="sidebar">Sidebar</MenuItem>
+          <MenuItem id="minimap">Minimap</MenuItem>
+        </MenuSection>
+        <MenuSeparator />
+        <MenuSection
+          title="Density"
+          selectionMode="single"
+          defaultSelectedKeys={['comfortable']}
+        >
+          <MenuItem id="comfortable">Comfortable</MenuItem>
+          <MenuItem id="compact">Compact</MenuItem>
+        </MenuSection>
+      </Menu>
+    </MenuTrigger>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
 
-export const Default: Story = {
-  ...Template,
-  args: {
-    placement: 'bottom',
-    trigger: 'click'
-  }
-};
+    await userEvent.click(canvas.getByRole('button', { name: 'View' }));
+    const minimap = await page.findByRole('menuitemcheckbox', {
+      name: 'Minimap',
+    });
+    await expect(
+      page.getByRole('menuitemcheckbox', { name: 'Sidebar' }),
+    ).toHaveAttribute('aria-checked', 'true');
+    await expect(minimap).toHaveAttribute('aria-checked', 'false');
+    await expect(
+      page.getByRole('menuitemradio', { name: 'Comfortable' }),
+    ).toHaveAttribute('aria-checked', 'true');
+    await expect(
+      page.getByRole('group', { name: 'Density' }),
+    ).toBeInTheDocument();
 
+    await userEvent.click(minimap);
+    await expect(
+      await page.findByRole('menuitemcheckbox', { name: 'Minimap' }),
+    ).toHaveAttribute('aria-checked', 'true');
+  },
+};

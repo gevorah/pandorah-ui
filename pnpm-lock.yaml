@@ -220,9 +220,6 @@ importers:
 
   packages/react:
     dependencies:
-      '@floating-ui/react':
-        specifier: ^0.26.16
-        version: 0.26.16(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@types/react':
         specifier: ^19.0.0
         version: 19.3.0
