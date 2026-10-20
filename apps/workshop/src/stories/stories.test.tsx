@@ -59,7 +59,7 @@ describe('Button', () => {
         Save
       </Button>,
     );
-    // @ts-expect-error
+    // @ts-expect-error Button only accepts a ref to an HTMLButtonElement
     void (<Button ref={createRef<HTMLDivElement>()}>Save</Button>);
 
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);

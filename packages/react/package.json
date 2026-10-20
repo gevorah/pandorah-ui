@@ -1,43 +1,30 @@
 {
   "name": "@pandorah-ui/react",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./styles.css": "./dist/index.css",
-    "./tailwind.css": "./dist/tailwind.css"
+    "./styles.css": "./src/styles/tokens.css"
   },
   "scripts": {
-    "build": "tsup && pnpm run build:tailwind",
-    "dev": "tsup --watch && pnpm run dev:tailwind",
-    "build:tailwind": "tailwindcss -i ./src/index.css -o ./dist/tailwind.css --minify",
-    "dev:tailwind": "tailwindcss -i ./src/index.css -o ./dist/tailwind.css --watch",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "lint": "eslint . --ext ts,tsx",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .turbo && rm -rf node_modules"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "react-aria-components": "^1.22.1",
     "react-dropzone": "^14.2.3",
     "tailwind-merge": "^2.3.0",
-    "tailwind-variants": "^0.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-variants": "^0.2.1"
   },
   "devDependencies": {
-    "@pandorah-ui/tailwind-config": "workspace:*",
     "@pandorah-ui/tsconfig": "workspace:*",
-    "@types/node": "^20.12.12",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "tsup": "^8.0.2",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {

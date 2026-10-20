@@ -1,7 +1,7 @@
 import { withThemeByClassName } from '@storybook/addon-themes';
 import type { Preview } from '@storybook/react';
 
-import '@pandorah-ui/react/tailwind.css';
+import '@pandorah-ui/react/styles.css';
 import '../src/index.css';
 
 export const decorators = [
