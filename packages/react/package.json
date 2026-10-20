@@ -12,18 +12,20 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./styles.css": "./dist/index.css"
+    "./styles.css": "./dist/index.css",
+    "./tailwind.css": "./dist/tailwind.css"
   },
   "scripts": {
     "build": "tsup && pnpm run build:tailwind",
     "dev": "tsup --watch && pnpm run dev:tailwind",
-    "build:tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css --minify",
-    "dev:tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css --watch",
+    "build:tailwind": "tailwindcss -i ./src/index.css -o ./dist/tailwind.css --minify",
+    "dev:tailwind": "tailwindcss -i ./src/index.css -o ./dist/tailwind.css --watch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.16",
     "clsx": "^2.1.1",
+    "react-aria-components": "^1.22.1",
     "react-dropzone": "^14.2.3",
     "tailwind-merge": "^2.3.0",
     "tailwind-variants": "^0.2.1",
@@ -40,9 +42,9 @@
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "react": "^18.0",
-    "react-dom": "^18.0"
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

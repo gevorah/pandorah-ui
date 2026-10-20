@@ -30,3 +30,5 @@ yarn-error.log*
 *.pem
 
 *storybook.log
+
+.playwright-mcp/

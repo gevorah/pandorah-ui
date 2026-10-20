@@ -1,52 +1,49 @@
-import type { ReactNode } from 'react';
+'use client';
 
-import { TooltipContextProvider } from './Tooltip.context';
-import { useTooltip, type UseTooltipOptions } from './useTooltip';
+import type { Ref } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import {
+  Tooltip as AriaTooltip,
+  OverlayArrow,
+  type TooltipProps as AriaTooltipProps
+} from 'react-aria-components/Tooltip';
 
-export type TooltipProps = { children: ReactNode } & UseTooltipOptions;
+import styles from './Tooltip.module.css';
 
-export const Tooltip = (props: TooltipProps) => {
-  const {
-    placement = 'top',
-    strategy = 'absolute',
-    middleware,
-    defaultOpen = false,
-    open,
-    onOpenChange,
-    offset = 0,
-    children
-  } = props;
-
-  const tooltip = useTooltip({
-    placement,
-    strategy,
-    middleware,
-    defaultOpen,
-    open,
-    onOpenChange,
-    offset
-  });
-
-  return (
-    <TooltipContextProvider
-      value={{
-        context: tooltip.floating.context,
-        placement: tooltip.floating.placement,
-        strategy: tooltip.floating.strategy,
-        x: tooltip.floating.x,
-        y: tooltip.floating.y,
-        floatingStyles: tooltip.floating.floatingStyles,
-        reference: tooltip.floating.refs.setReference,
-        floating: tooltip.floating.refs.setFloating,
-        open: tooltip.open,
-        setOpen: tooltip.setOpen,
-        interactions: tooltip.interactions,
-        arrowRef: tooltip.arrowRef
-      }}
-    >
-      {children}
-    </TooltipContextProvider>
-  );
+export type TooltipProps = AriaTooltipProps & {
+  ref?: Ref<HTMLDivElement>;
 };
 
-Tooltip.displayName = 'Tooltip';
+export function Tooltip({
+  className,
+  children,
+  offset = 8,
+  ...props
+}: TooltipProps) {
+  return (
+    <AriaTooltip
+      {...props}
+      offset={offset}
+      className={composeRenderProps(className, (className) =>
+        className ? `${styles.tooltip} ${className}` : styles.tooltip
+      )}
+    >
+      {composeRenderProps(children, (children) => (
+        <>
+          <OverlayArrow>
+            <svg
+              width={8}
+              height={8}
+              viewBox="0 0 8 8"
+              aria-hidden="true"
+              className={styles.arrow}
+            >
+              <path d="M0 0 L4 4 L8 0" />
+            </svg>
+          </OverlayArrow>
+          {children}
+        </>
+      ))}
+    </AriaTooltip>
+  );
+}

@@ -1,51 +1,34 @@
-import { forwardRef, type ComponentPropsWithoutRef } from 'react';
-import { tv, type VariantProps } from 'tailwind-variants';
+'use client';
 
-import { cn } from '../../../lib/utils';
+import type { Ref } from 'react';
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps
+} from 'react-aria-components/Button';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
-const button = tv({
-  base: [
-    'inline-flex items-center justify-center whitespace-nowrap',
-    'rounded-md transition-colors',
-    'text-base font-medium leading-normal tracking-normal',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-200 focus-visible:ring-offset-2',
-    'disabled:pointer-events-none disabled:opacity-60'
-  ],
-  variants: {
-    variant: {
-      solid: 'bg-black text-white hover:bg-neutral-800',
-      outline:
-        'border border-neutral-800 text-neutral-800 hover:bg-neutral-100',
-      ghost: 'hover:bg-neutral-100'
-    },
-    size: {
-      sm: 'h-8 px-2 py-1',
-      md: 'h-9 px-4 py-1.5',
-      lg: 'h-11 px-6 py-2',
-      icon: 'h-8 w-8'
-    }
-  },
-  defaultVariants: {
-    variant: 'solid',
-    size: 'md'
-  }
-});
+import styles from './Button.module.css';
 
-export type ButtonProps = {} & ComponentPropsWithoutRef<'button'> &
-  VariantProps<typeof button>;
+export type ButtonProps = AriaButtonProps & {
+  ref?: Ref<HTMLButtonElement>;
+  variant?: 'solid' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
+};
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => {
-    const { className, variant, size, ...rest } = props;
-
-    return (
-      <button
-        ref={ref}
-        className={cn(button({ variant, size, className }))}
-        {...rest}
-      />
-    );
-  }
-);
-Button.displayName = 'Button';
-
+export function Button({
+  variant = 'solid',
+  size = 'md',
+  className,
+  ...props
+}: ButtonProps) {
+  return (
+    <AriaButton
+      {...props}
+      data-variant={variant}
+      data-size={size}
+      className={composeRenderProps(className, (className) =>
+        className ? `${styles.button} ${className}` : styles.button
+      )}
+    />
+  );
+}

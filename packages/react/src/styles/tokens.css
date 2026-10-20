@@ -1,0 +1,47 @@
+:root {
+  --color-white: #ffffff;
+
+  --color-gray-1: #f3f4f6;
+  --color-gray-2: #e5e7eb;
+  --color-gray-3: #d1d5db;
+  --color-gray-4: #9ca3af;
+  --color-gray-5: #6b7280;
+  --color-gray-6: #4b5563;
+  --color-gray-7: #374151;
+  --color-gray-8: #1f2937;
+  --color-gray-9: #111827;
+
+  --color-violet-1: #ede9fe;
+  --color-violet-2: #ddd6fe;
+  --color-violet-3: #c4b5fd;
+  --color-violet-4: #a78bfa;
+  --color-violet-5: #8b5cf6;
+  --color-violet-6: #7c3aed;
+  --color-violet-7: #6d28d9;
+  --color-violet-8: #5b21b6;
+  --color-violet-9: #4c1d95;
+
+  --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+:root {
+  --color-background-accent: var(--color-violet-6);
+  --color-background-accent-hover: var(--color-violet-7);
+  --color-background-accent-pressed: var(--color-violet-8);
+  --color-background-accent-subtle-hover: var(--color-violet-1);
+  --color-background-accent-subtle-pressed: var(--color-violet-2);
+  --color-background-disabled: var(--color-gray-1);
+  --color-background-inverse: var(--color-gray-9);
+
+  --color-text-primary: var(--color-gray-9);
+  --color-text-accent: var(--color-violet-7);
+  --color-text-on-accent: var(--color-white);
+  --color-text-inverse: var(--color-gray-1);
+  --color-text-disabled: var(--color-gray-4);
+
+  --color-border-accent: var(--color-violet-6);
+  --color-border-disabled: var(--color-gray-2);
+  --color-border-focus: var(--color-violet-6);
+
+  --shadow-overlay: var(--shadow-2);
+}

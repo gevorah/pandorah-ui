@@ -6,8 +6,10 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
-  minify: true,
+  minifyWhitespace: true,
+  minifySyntax: true,
   target: 'esnext',
-  outDir: 'dist'
+  outDir: 'dist',
+  loader: { '.css': 'local-css' }
 });
 
