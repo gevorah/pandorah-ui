@@ -1,9 +1,9 @@
 import { useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import { calculateZoomLevel } from '@lexical/utils';
-import { ResizeHandle } from '@pandorah-ui/react';
 import type { LexicalEditor } from 'lexical';
 
 import { clamp } from '../utils/clamp';
+import { ResizeHandle } from './ResizeHandle';
 
 const Direction = {
   east: 1 << 0,
