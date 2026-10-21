@@ -25,7 +25,11 @@ export const ImageToolbarPlugin = () => {
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const { context, refs, floatingStyles } = useFloating({
+  const {
+    context,
+    refs: { setFloating, setReference },
+    floatingStyles
+  } = useFloating({
     placement: 'bottom',
     strategy: 'absolute',
     whileElementsMounted: autoUpdate,
@@ -42,7 +46,7 @@ export const ImageToolbarPlugin = () => {
       if ($isImageNode(node)) {
         const element = editor.getElementByKey(node.getKey());
         if (element) {
-          refs.setReference(element.firstElementChild);
+          setReference(element.firstElementChild);
           setOpen(true);
         }
       }
@@ -74,7 +78,7 @@ export const ImageToolbarPlugin = () => {
   return (
     <FloatingPortal>
       <div
-        ref={refs.setFloating}
+        ref={setFloating}
         style={floatingStyles}
         className={styles.toolbar}
       >

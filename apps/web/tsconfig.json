@@ -1,7 +1,6 @@
 {
   "extends": "@pandorah-ui/tsconfig/vite.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

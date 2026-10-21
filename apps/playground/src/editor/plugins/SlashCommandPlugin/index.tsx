@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type ReactElement } from 'react';
 import {
   INSERT_CHECK_LIST_COMMAND,
   INSERT_ORDERED_LIST_COMMAND,
@@ -40,14 +40,14 @@ import styles from './SlashCommandPlugin.module.css';
 
 class ComponentPickerOption extends MenuOption {
   title: string;
-  icon?: ReactNode;
+  icon?: ReactElement;
   keywords: Array<string>;
   onSelect: (queryString: string) => void;
 
   constructor(
     title: string,
     options: {
-      icon?: ReactNode;
+      icon?: ReactElement;
       keywords?: Array<string>;
       onSelect: (queryString: string) => void;
     }
@@ -70,11 +70,12 @@ type SlashMenuItemProps = {
 
 const ComponentPickerMenuItem = (props: SlashMenuItemProps) => {
   const { index, isSelected, onClick, onMouseEnter, option } = props;
+  const { key, setRefElement, icon, title } = option;
 
   return (
     <li
-      key={option.key}
-      ref={option.setRefElement}
+      key={key}
+      ref={setRefElement}
       id={'typeahead-item-' + index}
       role="option"
       aria-selected={isSelected}
@@ -83,8 +84,8 @@ const ComponentPickerMenuItem = (props: SlashMenuItemProps) => {
       onClick={onClick}
       className={styles.item}
     >
-      {option.icon}
-      <span className={styles.title}>{option.title}</span>
+      {icon}
+      <span className={styles.title}>{title}</span>
     </li>
   );
 };

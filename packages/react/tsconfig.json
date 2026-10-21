@@ -1,8 +1,5 @@
 {
   "extends": "@pandorah-ui/tsconfig/react.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
 }
