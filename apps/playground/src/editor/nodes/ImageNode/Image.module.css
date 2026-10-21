@@ -1,0 +1,31 @@
+.frame {
+  position: relative;
+}
+
+.frame:where([data-format='left'], [data-format='start']) {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.frame:where([data-format='center'], [data-format='justify']) {
+  margin-inline: auto;
+}
+
+.frame:where([data-format='right'], [data-format='end']) {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.image:where([data-focused]) {
+  outline: 2px solid #2563eb;
+}
+
+.image:where([data-focused][data-grabbable]) {
+  cursor: grab;
+}

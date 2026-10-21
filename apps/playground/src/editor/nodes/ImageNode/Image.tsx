@@ -22,8 +22,7 @@ import {
   type NodeKey
 } from 'lexical';
 
-import { cn } from '@/lib/utils';
-
+import styles from './Image.module.css';
 import { $isImageNode } from './ImageNode';
 import { LazyImage } from './LazyImage';
 
@@ -166,11 +165,8 @@ export const Image = (props: ImageProps) => {
   return (
     <Suspense fallback={null}>
       <div
-        className={cn('relative', {
-          'ml-0 mr-auto': format === 'left' || format === 'start',
-          'mx-auto': format === 'center' || format === 'justify',
-          'ml-auto mr-0': format === 'right' || format === 'end'
-        })}
+        className={styles.frame}
+        data-format={format || undefined}
         style={{ width, height }}
       >
         <div draggable={draggable}>
@@ -178,11 +174,9 @@ export const Image = (props: ImageProps) => {
             ref={imageRef}
             src={src}
             alt={alt}
-            className={cn(
-              'h-auto w-full max-w-full',
-              isFocused && 'outline outline-2 outline-blue-600',
-              isFocused && $isNodeSelection(selection) && 'cursor-grab'
-            )}
+            className={styles.image}
+            data-focused={isFocused || undefined}
+            data-grabbable={$isNodeSelection(selection) || undefined}
           />
         </div>
       </div>

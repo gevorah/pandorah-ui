@@ -1,0 +1,38 @@
+{
+  "name": "playground",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --clearScreen false",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx",
+    "type-check": "tsc",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.26.16",
+    "@lexical/code": "^0.16.0",
+    "@lexical/link": "^0.16.0",
+    "@lexical/list": "^0.16.0",
+    "@lexical/markdown": "^0.16.0",
+    "@lexical/overflow": "^0.16.0",
+    "@lexical/react": "^0.16.0",
+    "@lexical/rich-text": "^0.16.0",
+    "@lexical/selection": "^0.16.0",
+    "@lexical/utils": "^0.16.0",
+    "@pandorah-ui/react": "workspace:*",
+    "lexical": "^0.16.0",
+    "lucide-react": "^1.60.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@pandorah-ui/tsconfig": "workspace:*",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  }
+}

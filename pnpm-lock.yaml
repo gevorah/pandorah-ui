@@ -35,15 +35,79 @@ importers:
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
-      prettier-plugin-tailwindcss:
-        specifier: ^0.6.4
-        version: 0.6.4(@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.3.2))(prettier@3.3.2)
       turbo:
         specifier: ^2.0.4
         version: 2.0.4
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
+
+  apps/playground:
+    dependencies:
+      '@floating-ui/react':
+        specifier: ^0.26.16
+        version: 0.26.16(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@lexical/code':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/link':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/list':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/markdown':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/overflow':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/react':
+        specifier: ^0.16.0
+        version: 0.16.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(yjs@13.6.18)
+      '@lexical/rich-text':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/selection':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@lexical/utils':
+        specifier: ^0.16.0
+        version: 0.16.0
+      '@pandorah-ui/react':
+        specifier: workspace:*
+        version: link:../../packages/react
+      lexical:
+        specifier: ^0.16.0
+        version: 0.16.0
+      lucide-react:
+        specifier: ^1.60.0
+        version: 1.60.0(@types/react@19.3.0)(react@19.3.1)
+      react:
+        specifier: ^19.3.1
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.3.1
+        version: 19.3.1(react@19.3.1)
+    devDependencies:
+      '@pandorah-ui/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.3.0
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.0
+        version: 4.3.0(vite@5.2.11(@types/node@20.14.2)(terser@5.31.0))
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.2.11
+        version: 5.2.11(@types/node@20.14.2)(terser@5.31.0)
 
   apps/web:
     dependencies:
@@ -93,45 +157,9 @@ importers:
 
   apps/workshop:
     dependencies:
-      '@floating-ui/react':
-        specifier: ^0.26.16
-        version: 0.26.16(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@lexical/code':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/link':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/list':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/markdown':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/overflow':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/react':
-        specifier: ^0.16.0
-        version: 0.16.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(yjs@13.6.18)
-      '@lexical/rich-text':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/selection':
-        specifier: ^0.16.0
-        version: 0.16.0
-      '@lexical/utils':
-        specifier: ^0.16.0
-        version: 0.16.0
       '@pandorah-ui/react':
         specifier: workspace:*
         version: link:../../packages/react
-      lexical:
-        specifier: ^0.16.0
-        version: 0.16.0
-      lucide-react:
-        specifier: ^1.60.0
-        version: 1.60.0(@types/react@19.3.0)(react@19.3.1)
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -142,9 +170,6 @@ importers:
       '@chromatic-com/storybook':
         specifier: ^1.4.0
         version: 1.4.0(react@19.3.1)
-      '@pandorah-ui/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/tailwind-config
       '@pandorah-ui/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -184,27 +209,12 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.3.0
         version: 4.3.0(vite@5.2.11(@types/node@20.14.2)(terser@5.31.0))
-      autoprefixer:
-        specifier: ^10.4.19
-        version: 10.4.19(postcss@8.4.38)
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       jsdom:
         specifier: ^27
         version: 27.4.0
-      postcss:
-        specifier: ^8.4.38
-        version: 8.4.38
       storybook:
         specifier: ^8.1.3
         version: 8.1.3(@babel/preset-env@7.24.6(@babel/core@7.24.6))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      tailwind-merge:
-        specifier: ^2.3.0
-        version: 2.3.0
-      tailwindcss:
-        specifier: ^3.4.3
-        version: 3.4.3
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -239,8 +249,6 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
-
-  packages/tailwind-config: {}
 
   packages/tsconfig: {}
 
@@ -4184,58 +4192,6 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-tailwindcss@0.6.4:
-    resolution: {integrity: sha512-3vhbIvlKyAWPaw9bUr2cw6M1BGx2Oy9CCLJyv+nxEiBGCTcL69WcAz2IFMGqx8IXSzQCInGSo2ujAByg9poHLQ==}
-    engines: {node: '>=14.21.3'}
-    peerDependencies:
-      '@ianvs/prettier-plugin-sort-imports': '*'
-      '@prettier/plugin-pug': '*'
-      '@shopify/prettier-plugin-liquid': '*'
-      '@trivago/prettier-plugin-sort-imports': '*'
-      '@zackad/prettier-plugin-twig-melody': '*'
-      prettier: ^3.0
-      prettier-plugin-astro: '*'
-      prettier-plugin-css-order: '*'
-      prettier-plugin-import-sort: '*'
-      prettier-plugin-jsdoc: '*'
-      prettier-plugin-marko: '*'
-      prettier-plugin-organize-attributes: '*'
-      prettier-plugin-organize-imports: '*'
-      prettier-plugin-sort-imports: '*'
-      prettier-plugin-style-order: '*'
-      prettier-plugin-svelte: '*'
-    peerDependenciesMeta:
-      '@ianvs/prettier-plugin-sort-imports':
-        optional: true
-      '@prettier/plugin-pug':
-        optional: true
-      '@shopify/prettier-plugin-liquid':
-        optional: true
-      '@trivago/prettier-plugin-sort-imports':
-        optional: true
-      '@zackad/prettier-plugin-twig-melody':
-        optional: true
-      prettier-plugin-astro:
-        optional: true
-      prettier-plugin-css-order:
-        optional: true
-      prettier-plugin-import-sort:
-        optional: true
-      prettier-plugin-jsdoc:
-        optional: true
-      prettier-plugin-marko:
-        optional: true
-      prettier-plugin-organize-attributes:
-        optional: true
-      prettier-plugin-organize-imports:
-        optional: true
-      prettier-plugin-sort-imports:
-        optional: true
-      prettier-plugin-style-order:
-        optional: true
-      prettier-plugin-svelte:
-        optional: true
-
   prettier@3.3.2:
     resolution: {integrity: sha512-rAVeHYMcv8ATV5d508CFdn+8/pHPpXeIid1DdrPwXnaAdH7cqjVbpJaT5eq4yRAFU/lsbwYwSF/n5iNrdJHPQA==}
     engines: {node: '>=14'}
@@ -4761,9 +4717,6 @@ packages:
 
   tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
-
-  tailwind-merge@2.3.0:
-    resolution: {integrity: sha512-vkYrLpIP+lgR0tQCG6AP7zZXCTLc1Lnv/CCRT3BqJ9CZ3ui2++GPaGb1x/ILsINIMSYqqvrpqjUFsMNLlW99EA==}
 
   tailwindcss@3.4.3:
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
@@ -10190,12 +10143,6 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.6.4(@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.3.2))(prettier@3.3.2):
-    dependencies:
-      prettier: 3.3.2
-    optionalDependencies:
-      '@ianvs/prettier-plugin-sort-imports': 4.2.1(prettier@3.3.2)
-
   prettier@3.3.2: {}
 
   pretty-format@27.5.1:
@@ -10833,10 +10780,6 @@ snapshots:
   symbol-tree@3.2.4: {}
 
   tabbable@6.2.0: {}
-
-  tailwind-merge@2.3.0:
-    dependencies:
-      '@babel/runtime': 7.24.6
 
   tailwindcss@3.4.3:
     dependencies:

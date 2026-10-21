@@ -1,0 +1,56 @@
+.handle {
+  position: absolute;
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid #fff;
+  background-color: #3b82f6;
+}
+
+.handle:where([data-direction='north']) {
+  top: -0.375rem;
+  left: 48%;
+  cursor: n-resize;
+}
+
+.handle:where([data-direction='east']) {
+  right: -0.375rem;
+  bottom: 48%;
+  cursor: e-resize;
+}
+
+.handle:where([data-direction='south']) {
+  bottom: -0.375rem;
+  left: 48%;
+  cursor: s-resize;
+}
+
+.handle:where([data-direction='west']) {
+  left: -0.375rem;
+  bottom: 48%;
+  cursor: w-resize;
+}
+
+.handle:where([data-direction='north-east']) {
+  top: -0.375rem;
+  right: -0.375rem;
+  cursor: ne-resize;
+}
+
+.handle:where([data-direction='south-east']) {
+  right: -0.375rem;
+  bottom: -0.375rem;
+  cursor: se-resize;
+}
+
+.handle:where([data-direction='south-west']) {
+  bottom: -0.375rem;
+  left: -0.375rem;
+  cursor: sw-resize;
+}
+
+.handle:where([data-direction='north-west']) {
+  top: -0.375rem;
+  left: -0.375rem;
+  cursor: nw-resize;
+}

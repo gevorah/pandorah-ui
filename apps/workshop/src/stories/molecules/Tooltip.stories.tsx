@@ -136,7 +136,7 @@ export const IconButton: Story = {
   render: ({ content, ...tooltipProps }) => (
     <TooltipTrigger>
       <Button variant="ghost" size="icon" aria-label="Settings">
-        <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4">
+        <svg viewBox="0 0 16 16" aria-hidden="true" width="16" height="16">
           <circle
             cx="8"
             cy="8"

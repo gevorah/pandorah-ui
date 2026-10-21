@@ -3,8 +3,5 @@
   "eslint.workingDirectories": [
     { "pattern": "apps/*/" },
     { "pattern": "packages/*/" }
-  ],
-  "tailwindCSS.experimental.classRegex": [
-      ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ]
 }

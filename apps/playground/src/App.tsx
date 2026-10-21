@@ -1,9 +1,10 @@
+import styles from './App.module.css';
 import { Editor } from './editor';
 
 function App() {
   return (
     <main>
-      <div className="mx-auto mt-9 max-w-2xl">
+      <div className={styles.container}>
         <Editor />
       </div>
     </main>

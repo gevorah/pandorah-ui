@@ -18,6 +18,8 @@ import {
   SELECTION_CHANGE_COMMAND
 } from 'lexical';
 
+import styles from './ImageToolbarPlugin.module.css';
+
 export const ImageToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
 
@@ -74,7 +76,7 @@ export const ImageToolbarPlugin = () => {
       <div
         ref={refs.setFloating}
         style={floatingStyles}
-        className="space-x-2 rounded-md bg-white p-1 shadow-md"
+        className={styles.toolbar}
       >
         <button type="button">Crop</button>
         <button

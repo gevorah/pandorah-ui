@@ -34,10 +34,9 @@ import {
 } from 'lucide-react';
 import * as ReactDOM from 'react-dom';
 
-import { cn } from '@/lib/utils';
-
 import icon from '../../assets/icon.png';
 import { INSERT_IMAGE_COMMAND } from '../ImagePlugin/ImagePlugin';
+import styles from './SlashCommandPlugin.module.css';
 
 class ComponentPickerOption extends MenuOption {
   title: string;
@@ -82,13 +81,10 @@ const ComponentPickerMenuItem = (props: SlashMenuItemProps) => {
       tabIndex={-1}
       onMouseEnter={onMouseEnter}
       onClick={onClick}
-      className={cn(
-        'flex cursor-pointer flex-row items-center gap-2 rounded-md px-1.5 py-1 outline-none',
-        isSelected && 'bg-neutral-900/10'
-      )}
+      className={styles.item}
     >
       {option.icon}
-      <span className="flex-1 text-nowrap text-base">{option.title}</span>
+      <span className={styles.title}>{option.title}</span>
     </li>
   );
 };
@@ -96,7 +92,7 @@ const ComponentPickerMenuItem = (props: SlashMenuItemProps) => {
 function getBaseOptions(editor: LexicalEditor) {
   return [
     new ComponentPickerOption('Paragraph', {
-      icon: <Text className="size-4" />,
+      icon: <Text className={styles.icon} />,
       keywords: ['normal', 'paragraph', 'p', 'text'],
       onSelect: () =>
         editor.update(() => {
@@ -107,7 +103,7 @@ function getBaseOptions(editor: LexicalEditor) {
         })
     }),
     new ComponentPickerOption('Heading 1', {
-      icon: <Heading1 className="size-4" />,
+      icon: <Heading1 className={styles.icon} />,
       keywords: ['heading', 'h1'],
       onSelect: () =>
         editor.update(() => {
@@ -118,7 +114,7 @@ function getBaseOptions(editor: LexicalEditor) {
         })
     }),
     new ComponentPickerOption('Heading 2', {
-      icon: <Heading2 className="size-4" />,
+      icon: <Heading2 className={styles.icon} />,
       keywords: ['heading', 'h2'],
       onSelect: () =>
         editor.update(() => {
@@ -129,7 +125,7 @@ function getBaseOptions(editor: LexicalEditor) {
         })
     }),
     new ComponentPickerOption('Heading 3', {
-      icon: <Heading3 className="size-4" />,
+      icon: <Heading3 className={styles.icon} />,
       keywords: ['heading', 'h3'],
       onSelect: () =>
         editor.update(() => {
@@ -140,25 +136,25 @@ function getBaseOptions(editor: LexicalEditor) {
         })
     }),
     new ComponentPickerOption('Bulleted List', {
-      icon: <List className="size-4" />,
+      icon: <List className={styles.icon} />,
       keywords: ['bulleted list', 'unordered list', 'ul'],
       onSelect: () =>
         editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)
     }),
     new ComponentPickerOption('Numbered List', {
-      icon: <ListOrdered className="size-4" />,
+      icon: <ListOrdered className={styles.icon} />,
       keywords: ['numbered list', 'ordered list', 'ol'],
       onSelect: () =>
         editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)
     }),
     new ComponentPickerOption('Check List', {
-      icon: <ListChecks className="size-4" />,
+      icon: <ListChecks className={styles.icon} />,
       keywords: ['check list', 'todo list'],
       onSelect: () =>
         editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined)
     }),
     new ComponentPickerOption('Quote', {
-      icon: <Quote className="size-4" />,
+      icon: <Quote className={styles.icon} />,
       keywords: ['blockquote', 'quote'],
       onSelect: () =>
         editor.update(() => {
@@ -169,13 +165,13 @@ function getBaseOptions(editor: LexicalEditor) {
         })
     }),
     new ComponentPickerOption('Divider', {
-      icon: <Minus className="size-4" />,
+      icon: <Minus className={styles.icon} />,
       keywords: ['horizontal rule', 'divider', 'hr'],
       onSelect: () =>
         editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined)
     }),
     new ComponentPickerOption('Image', {
-      icon: <Image className="size-4" />,
+      icon: <Image className={styles.icon} />,
       keywords: ['image', 'img'],
       onSelect: () =>
         editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
@@ -238,7 +234,7 @@ export const SlashCommandPlugin = () => {
       ) =>
         anchorElementRef.current && options.length
           ? ReactDOM.createPortal(
-              <div className="flex min-w-48 flex-col rounded-md bg-white p-1.5 shadow-md">
+              <div className={styles.menu}>
                 <ul>
                   {options.map((option, i: number) => (
                     <ComponentPickerMenuItem

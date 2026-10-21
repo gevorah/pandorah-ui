@@ -1,0 +1,10 @@
+.toolbar {
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  background-color: var(--color-background-surface);
+  box-shadow: var(--shadow-overlay);
+}
+
+.toolbar > :not([hidden]) ~ :not([hidden]) {
+  margin-left: 0.5rem;
+}

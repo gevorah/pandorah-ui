@@ -3,6 +3,7 @@ import { calculateZoomLevel } from '@lexical/utils';
 import type { LexicalEditor } from 'lexical';
 
 import { clamp } from '../utils/clamp';
+import styles from './ImageResizer.module.css';
 import { ResizeHandle } from './ResizeHandle';
 
 const Direction = {
@@ -143,7 +144,7 @@ export const ImageResizer = (props: ImageResizerProps) => {
       setStartCursor(direction);
       onResizeStart();
 
-      controlWrapper.classList.add('touch-none');
+      controlWrapper.classList.add(styles.resizing);
       // image.style.height = `${height}px`;
       // image.style.width = `${width}px`;
 
@@ -196,7 +197,7 @@ export const ImageResizer = (props: ImageResizerProps) => {
       positioning.startY = 0;
       positioning.isResizing = false;
 
-      controlWrapper.classList.remove('touch-none');
+      controlWrapper.classList.remove(styles.resizing);
 
       setEndCursor();
       onResizeEnd(width, height);

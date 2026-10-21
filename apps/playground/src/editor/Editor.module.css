@@ -1,0 +1,20 @@
+.contentEditable {
+  min-height: 24rem;
+  padding: 1rem 2rem;
+  border: 1px solid #262626;
+  border-radius: 0.375rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.placeholder {
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+  opacity: 0.6;
+}
+
+.image {
+  position: relative;
+  display: block;
+}

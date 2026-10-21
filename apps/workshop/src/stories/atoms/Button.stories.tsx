@@ -72,7 +72,7 @@ export const Ghost: Story = {
 
 export const Sizes: Story = {
   render: (args) => (
-    <div className="flex items-center gap-4">
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
       <Button {...args} size="sm">
         Small
       </Button>
@@ -83,7 +83,7 @@ export const Sizes: Story = {
         Large
       </Button>
       <Button {...args} size="icon" aria-label="Add">
-        <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4">
+        <svg viewBox="0 0 16 16" aria-hidden="true" width="16" height="16">
           <path
             d="M8 3v10M3 8h10"
             stroke="currentColor"

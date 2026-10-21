@@ -9,6 +9,7 @@ import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 
+import styles from './Editor.module.css';
 import { NodesKit } from './nodes/nodes-kit';
 import { ImagePlugin } from './plugins/ImagePlugin';
 import { ImageToolbarPlugin } from './plugins/ImageToolbarPlugin';
@@ -22,7 +23,7 @@ export const Editor = () => {
     onError: (error) => console.log(error),
     editable: true,
     theme: {
-      image: 'relative block'
+      image: styles.image
     },
     editorState: null
   };
@@ -32,10 +33,10 @@ export const Editor = () => {
       <RichTextPlugin
         contentEditable={
           <div>
-            <ContentEditable className="min-h-96 rounded-md border border-neutral-800 px-8 py-4 outline-none" />
+            <ContentEditable className={styles.contentEditable} />
           </div>
         }
-        placeholder={<div className="absolute left-8 top-4 opacity-60"></div>}
+        placeholder={<div className={styles.placeholder}></div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
       <HistoryPlugin />
