@@ -5,8 +5,8 @@ import {
   type TooltipProps,
   type TooltipTriggerProps
 } from '@pandorah-ui/react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { expect, userEvent, waitFor, within } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 async function hoverWithMouse(canvasElement: HTMLElement, target: Element) {
   await userEvent.pointer({ target: canvasElement });

@@ -7,15 +7,8 @@ import {
   MenuTrigger,
   SubmenuTrigger,
 } from '@pandorah-ui/react';
-import type { Meta, StoryObj } from '@storybook/react';
-import {
-  expect,
-  fn,
-  mocked,
-  userEvent,
-  waitFor,
-  within,
-} from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, mocked, userEvent, waitFor, within } from 'storybook/test';
 
 const meta = {
   title: 'Molecules/Menu',

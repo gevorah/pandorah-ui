@@ -1,6 +1,6 @@
 import { Button } from '@pandorah-ui/react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { expect, fn, userEvent, within } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
 
 const meta = {
   title: 'Atoms/Button',

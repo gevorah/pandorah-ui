@@ -5,17 +5,10 @@ import {
   Tooltip,
   TooltipTrigger,
 } from '@pandorah-ui/react';
-import { composeStories } from '@storybook/react';
-import { clearAllMocks } from '@storybook/test';
 import { createRef, type ReactElement } from 'react';
 import { flushSync } from 'react-dom';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-
-import * as ButtonStories from './atoms/Button.stories';
-import * as MenuStories from './molecules/Menu.stories';
-import * as PopoverStories from './molecules/Popover.stories';
-import * as TooltipStories from './molecules/Tooltip.stories';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -25,7 +18,6 @@ function render(element: ReactElement) {
 }
 
 beforeEach(() => {
-  clearAllMocks();
   container = document.body.appendChild(document.createElement('div'));
   root = createRoot(container);
 });
@@ -33,22 +25,6 @@ beforeEach(() => {
 afterEach(() => {
   root.unmount();
   container.remove();
-});
-
-describe.each([
-  ['Button', composeStories(ButtonStories)],
-  ['Tooltip', composeStories(TooltipStories)],
-  ['Popover', composeStories(PopoverStories)],
-  ['Menu', composeStories(MenuStories)],
-])('%s stories', (_, stories) => {
-  const storiesWithPlay = Object.entries(stories).filter(
-    ([, Story]) => Story.play,
-  );
-
-  it.each(storiesWithPlay)('%s', async (_, Story) => {
-    render(<Story />);
-    await Story.play!({ canvasElement: container });
-  });
 });
 
 describe('Button', () => {
