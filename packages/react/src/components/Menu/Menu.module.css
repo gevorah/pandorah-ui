@@ -35,7 +35,7 @@
 }
 
 .item:where([data-open]) {
-  background-color: var(--color-background-accent-subtle-hover);
+  background-color: var(--color-background-accent-subtle-open);
 }
 
 .item:where([data-focused]) {

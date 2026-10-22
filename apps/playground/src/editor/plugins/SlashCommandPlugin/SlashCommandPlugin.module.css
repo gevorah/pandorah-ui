@@ -20,7 +20,8 @@
 }
 
 .item:where([aria-selected='true']) {
-  background-color: rgb(23 23 23 / 0.1);
+  background-color: var(--color-background-accent);
+  color: var(--color-text-on-accent);
 }
 
 .icon {
@@ -33,4 +34,11 @@
   font-size: 1rem;
   line-height: 1.5rem;
   text-wrap: nowrap;
+}
+
+@media (forced-colors: active) {
+  .item:where([aria-selected='true']) {
+    background-color: Highlight;
+    color: HighlightText;
+  }
 }
