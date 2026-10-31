@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react-vite';
 
-import '@pandorah-ui/react/styles.css';
+import '@pandorah-ui/tokens/tokens.css';
 import './preview.css';
 
 const preview: Preview = {
