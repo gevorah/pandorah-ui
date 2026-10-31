@@ -50,11 +50,11 @@
   color: var(--color-text-on-accent);
 }
 
-.button:where([data-variant='solid'][data-hovered]) {
+.button:where([data-variant='solid']):where(:hover:not(:disabled, [data-pending])) {
   background-color: var(--color-background-accent-hover);
 }
 
-.button:where([data-variant='solid'][data-pressed]) {
+.button:where([data-variant='solid']):where(:active:not(:disabled, [data-pending])) {
   background-color: var(--color-background-accent-pressed);
 }
 
@@ -68,15 +68,15 @@
   color: var(--color-text-primary);
 }
 
-.button:where([data-variant='outline'], [data-variant='ghost']):where([data-hovered]) {
+.button:where([data-variant='outline'], [data-variant='ghost']):where(:hover:not(:disabled, [data-pending])) {
   background-color: var(--color-background-accent-subtle-hover);
 }
 
-.button:where([data-variant='outline'], [data-variant='ghost']):where([data-pressed]) {
+.button:where([data-variant='outline'], [data-variant='ghost']):where(:active:not(:disabled, [data-pending])) {
   background-color: var(--color-background-accent-subtle-pressed);
 }
 
-.button:where([data-focus-visible]) {
+.button:where(:focus-visible) {
   outline-color: var(--color-border-focus);
 }
 
@@ -84,15 +84,26 @@
   cursor: progress;
 }
 
-.button:where([data-disabled]) {
+.button:where(:disabled) {
   cursor: not-allowed;
   color: var(--color-text-disabled);
 }
 
-.button:where([data-variant='solid'][data-disabled]) {
+.button:where([data-variant='solid']):where(:disabled) {
   background-color: var(--color-background-disabled);
 }
 
-.button:where([data-variant='outline'][data-disabled]) {
+.button:where([data-variant='outline']):where(:disabled) {
   border-color: var(--color-border-disabled);
+}
+
+@media (forced-colors: active) {
+  .button {
+    outline-style: none;
+  }
+
+  .button:where(:focus-visible) {
+    outline-style: solid;
+    outline-color: Highlight;
+  }
 }

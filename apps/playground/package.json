@@ -21,7 +21,7 @@
     "@lexical/rich-text": "^0.52.0",
     "@lexical/selection": "^0.52.0",
     "@lexical/utils": "^0.52.0",
-    "@pandorah-ui/react": "workspace:*",
+    "@pandorah-ui/tokens": "workspace:*",
     "lexical": "^0.52.0",
     "lucide-react": "^1.60.0",
     "react": "^19.3.1",

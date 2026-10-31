@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@pandorah-ui/react": "workspace:*",
+    "@pandorah-ui/tokens": "workspace:*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
