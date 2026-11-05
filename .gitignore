@@ -5,6 +5,7 @@ node_modules
 
 # testing
 coverage
+apps/workshop/.vitest/
 
 # build outputs
 build
