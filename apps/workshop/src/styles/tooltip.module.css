@@ -1,0 +1,48 @@
+.popup {
+  box-sizing: border-box;
+  max-inline-size: 16rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-background-inverse);
+  color: var(--color-text-inverse);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition:
+    opacity 100ms ease,
+    scale 100ms ease;
+}
+
+/* Grow from the trigger. */
+.popup[data-side='top'] {
+  transform-origin: bottom;
+}
+
+.popup[data-side='bottom'] {
+  transform-origin: top;
+}
+
+.popup[data-side='left'] {
+  transform-origin: right;
+}
+
+.popup[data-side='right'] {
+  transform-origin: left;
+}
+
+@starting-style {
+  .popup[data-state='open'] {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.popup[data-state='closed'] {
+  opacity: 0;
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup {
+    transition: none;
+  }
+}

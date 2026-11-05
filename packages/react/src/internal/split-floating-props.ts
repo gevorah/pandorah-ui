@@ -1,9 +1,16 @@
+import type { JSX } from 'react';
+
 import type { UseRenderOptions } from './composition/use-render';
 
-type Interceptors = NonNullable<UseRenderOptions<'div'>['interceptors']>;
+type Tag = keyof JSX.IntrinsicElements;
+type Interceptors<T extends Tag> = NonNullable<
+  UseRenderOptions<T>['interceptors']
+>;
 type Interceptor = (event: unknown, next: () => void) => void;
 
-export function splitFloatingProps(floatingProps: Record<string, unknown>) {
+export function splitFloatingProps<T extends Tag = 'div'>(
+  floatingProps: Record<string, unknown>,
+) {
   const { tabIndex, ...rest } = floatingProps;
   const attributes: Record<string, unknown> = {};
   const interceptors: Record<string, Interceptor> = {};
@@ -20,6 +27,6 @@ export function splitFloatingProps(floatingProps: Record<string, unknown>) {
   return {
     tabIndex: tabIndex as number | undefined,
     attributes,
-    interceptors: interceptors as Interceptors,
+    interceptors: interceptors as Interceptors<T>,
   };
 }
