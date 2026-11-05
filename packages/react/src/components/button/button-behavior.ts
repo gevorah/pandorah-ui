@@ -1,6 +1,9 @@
-import type { ButtonHTMLAttributes } from 'react';
+import { isValidElement, type ButtonHTMLAttributes } from 'react';
 
-import type { UseRenderOptions } from '../../internal/composition/use-render';
+import type {
+  ComposableProps,
+  UseRenderOptions,
+} from '../../internal/composition/use-render';
 
 type ButtonBehavior = Pick<
   UseRenderOptions<'button'>,
@@ -8,21 +11,41 @@ type ButtonBehavior = Pick<
 >;
 type Interceptors = NonNullable<ButtonBehavior['interceptors']>;
 
-interface ButtonState {
+interface NativeButtonState {
+  render: ComposableProps<'button'>['render'];
   type: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   disabled: boolean | undefined;
+}
+
+interface ButtonState extends NativeButtonState {
   pending: boolean | undefined;
 }
 
+export function getNativeButtonAttributes({
+  render,
+  type,
+  disabled,
+}: NativeButtonState) {
+  const rendersOtherElement =
+    isValidElement(render) &&
+    typeof render.type === 'string' &&
+    render.type !== 'button';
+  const resolvedType = type ?? (rendersOtherElement ? undefined : 'button');
+  return {
+    ...(resolvedType && { type: resolvedType }),
+    ...(disabled && { disabled }),
+  };
+}
+
 export function getButtonBehavior({
-  type = 'button',
+  render,
+  type,
   disabled,
   pending,
 }: ButtonState): ButtonBehavior {
   return {
     owned: {
-      type,
-      ...(disabled && { disabled }),
+      ...getNativeButtonAttributes({ render, type, disabled }),
       'aria-disabled': (pending && !disabled) || undefined,
       'data-pending': pending || undefined,
     },

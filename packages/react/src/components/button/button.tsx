@@ -27,6 +27,6 @@ export function Button({
     render,
     ref,
     props,
-    ...getButtonBehavior({ type, disabled, pending }),
+    ...getButtonBehavior({ render, type, disabled, pending }),
   });
 }

@@ -66,8 +66,7 @@ export function useRender<T extends Tag>({
   const elementProps =
     render === undefined || typeof render === 'function'
       ? {}
-      : (checkRenderElement(name, tag, render, 'be').props as Props);
-  // Keeps undefined values: an owned attribute set to undefined must be absent.
+      : (checkRenderElement(name, render, 'be').props as Props);
   const ownedEntries = Object.entries(owned);
   const problems: string[] = [];
 
@@ -92,7 +91,7 @@ export function useRender<T extends Tag>({
 
   useDevelopmentDiagnostics(problems, () =>
     isDevelopment && render !== undefined
-      ? findElementProblem(name, tag, ownedEntries, elementRef.current)
+      ? findElementProblem(name, ownedEntries, elementRef.current)
       : undefined,
   );
 
@@ -101,7 +100,6 @@ export function useRender<T extends Tag>({
 
   return checkRenderElement(
     name,
-    tag,
     render(merged as ComponentPropsWithRef<T>),
     'return',
   );
@@ -109,22 +107,12 @@ export function useRender<T extends Tag>({
 
 function checkRenderElement(
   name: string,
-  tag: string,
   element: unknown,
   verb: 'be' | 'return',
 ): ReactElement {
   if (!isValidElement(element) || element.type === Fragment) {
-    throw new Error(
-      `${name}: \`render\` must ${verb} a single element that renders <${tag}>.`,
-    );
+    throw new Error(`${name}: \`render\` must ${verb} a single element.`);
   }
-  if (typeof element.type === 'string' && element.type !== tag) {
-    const received = verb === 'be' ? 'received' : 'returned';
-    throw new Error(
-      `${name}: \`render\` must ${verb} <${tag}>, but ${received} <${element.type}>.`,
-    );
-  }
-
   return element;
 }
 

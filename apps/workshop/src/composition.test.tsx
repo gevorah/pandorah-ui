@@ -23,7 +23,7 @@ import {
   vi,
   type MockInstance,
 } from 'vitest';
-import { cdp, userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 
 import { mergeProps } from '../../../packages/react/src/internal/composition/merge-props';
 import { mergeRefs } from '../../../packages/react/src/internal/composition/merge-refs';
@@ -32,6 +32,7 @@ import {
   useRender,
   type ComposableProps,
 } from '../../../packages/react/src/internal/composition/use-render';
+import { chromiumAXNode, isChromium } from './test/browser';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -78,7 +79,11 @@ describe('mergeProps', () => {
   it('joins classes, merges styles and ignores undefined values', () => {
     expect(
       mergeProps(
-        { className: 'base', style: { color: 'red', margin: 0 }, title: 'Base' },
+        {
+          className: 'base',
+          style: { color: 'red', margin: 0 },
+          title: 'Base',
+        },
         {
           className: 'override',
           style: { color: undefined, padding: 1 },
@@ -268,7 +273,12 @@ describe('mergeRefs and useMergeRefs', () => {
     const cleanup = vi.fn();
     const cleanupRef = vi.fn(() => cleanup);
 
-    const detach = mergeRefs(objectRef, legacyRef, cleanupRef, undefined)(element);
+    const detach = mergeRefs(
+      objectRef,
+      legacyRef,
+      cleanupRef,
+      undefined,
+    )(element);
     expect(objectRef.current).toBe(element);
     expect(legacyRef).toHaveBeenLastCalledWith(element);
 
@@ -292,14 +302,28 @@ describe('mergeRefs and useMergeRefs', () => {
       return <button ref={useMergeRefs(before, callbackRef, ...after)} />;
     }
 
-    render(<StrictMode><Target callbackRef={first} /></StrictMode>);
-    render(<StrictMode><Target callbackRef={first} /></StrictMode>);
+    render(
+      <StrictMode>
+        <Target callbackRef={first} />
+      </StrictMode>,
+    );
+    render(
+      <StrictMode>
+        <Target callbackRef={first} />
+      </StrictMode>,
+    );
     expect(events).toEqual(['first:attach', 'first:detach', 'first:attach']);
 
     events.length = 0;
-    render(<StrictMode><Target callbackRef={second} /></StrictMode>);
+    render(
+      <StrictMode>
+        <Target callbackRef={second} />
+      </StrictMode>,
+    );
     expect(events).toEqual(['first:detach', 'second:attach']);
-    expect(objectRefs.every((ref) => ref.current instanceof HTMLButtonElement)).toBe(true);
+    expect(
+      objectRefs.every((ref) => ref.current instanceof HTMLButtonElement),
+    ).toBe(true);
 
     events.length = 0;
     render(<></>);
@@ -313,7 +337,10 @@ describe('primitive interceptors', () => {
     run,
     render: renderElement,
     ...props
-  }: ComponentPropsWithRef<'button'> & { run: boolean; render?: ReactElement }) {
+  }: ComponentPropsWithRef<'button'> & {
+    run: boolean;
+    render?: ReactElement;
+  }) {
     return useRender({
       name: 'Probe',
       tag: 'button',
@@ -432,40 +459,6 @@ function PopoverTrigger({
 
 const popover = () => container.querySelector<HTMLElement>('[role="dialog"]')!;
 
-async function accessibleDescription(name: string) {
-  const session = cdp();
-  await session.send('Accessibility.enable');
-  const { frameTree } = (await session.send('Page.getFrameTree')) as {
-    frameTree: FrameTree;
-  };
-  type FrameTree = { frame: { id: string }; childFrames?: FrameTree[] };
-  const frames: string[] = [];
-  const walk = (tree: FrameTree) => {
-    frames.push(tree.frame.id);
-    tree.childFrames?.forEach(walk);
-  };
-  walk(frameTree);
-
-  for (const frameId of frames) {
-    const { nodes } = (await session.send('Accessibility.getFullAXTree', {
-      frameId,
-    })) as {
-      nodes: {
-        ignored: boolean;
-        role?: { value: string };
-        name?: { value: string };
-        description?: { value: string };
-      }[];
-    };
-    const button = nodes.find(
-      (node) =>
-        !node.ignored && node.role?.value === 'button' && node.name?.value === name,
-    );
-    if (button) return button.description?.value ?? '';
-  }
-  return undefined;
-}
-
 describe('multi-layer composition', () => {
   it('composes Tooltip.Trigger, Popover.Trigger and Button into one button with independent state', async () => {
     const order: string[] = [];
@@ -499,7 +492,13 @@ describe('multi-layer composition', () => {
     await settle();
     expect(tooltip.hidden).toBe(false);
     expect(trigger.getAttribute('aria-describedby')).toBe(`hint ${tooltip.id}`);
-    expect(await accessibleDescription('Filter')).toBe('Opens the filter panel Filters');
+    await expect
+      .element(page.elementLocator(trigger))
+      .toHaveAccessibleDescription('Opens the filter panel Filters');
+    if (isChromium) {
+      const node = await chromiumAXNode('button', 'Filter');
+      expect(node?.description?.value).toBe('Opens the filter panel Filters');
+    }
 
     await userEvent.keyboard('{Enter}');
     expect(order).toEqual(['button', 'popover', 'tooltip']);
@@ -555,12 +554,14 @@ describe('multi-layer composition', () => {
 
     for (const trigger of triggers) trigger.click();
     await settle();
-    expect(triggers.map((trigger) => trigger.disabled)).toEqual([true, true, true]);
-    expect(triggers.map((trigger) => trigger.getAttribute('aria-expanded'))).toEqual([
-      'false',
-      'false',
-      'false',
+    expect(triggers.map((trigger) => trigger.disabled)).toEqual([
+      true,
+      true,
+      true,
     ]);
+    expect(
+      triggers.map((trigger) => trigger.getAttribute('aria-expanded')),
+    ).toEqual(['false', 'false', 'false']);
     expect(errors()).toEqual([
       'Popover.Trigger: `disabled` is decided by the component and cannot be overridden.',
     ]);
@@ -613,5 +614,38 @@ describe('multi-layer composition', () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
     hydrated.unmount();
     server.remove();
+  });
+});
+
+describe('host elements', () => {
+  function Region({
+    render: renderElement,
+    ...props
+  }: ComponentPropsWithRef<'div'> & ComposableProps<'div'>) {
+    return useRender({
+      name: 'Region',
+      tag: 'div',
+      render: renderElement,
+      ref: undefined,
+      props,
+      owned: { role: 'region' },
+    });
+  }
+
+  it('renders the element or component `render` gives it', () => {
+    render(<Region aria-label="Element" render={<section />} />);
+    expect(container.querySelector('section')!.getAttribute('role')).toBe(
+      'region',
+    );
+    render(
+      <Region
+        aria-label="Function"
+        render={(props) => <article {...props} />}
+      />,
+    );
+    expect(container.querySelector('article')!.getAttribute('role')).toBe(
+      'region',
+    );
+    expect(errors()).toEqual([]);
   });
 });

@@ -1,57 +1,84 @@
-# @pandorah-ui/react
+# Pandorah UI
 
-Unstyled, accessible React components for Pandorah UI. Each component renders a native HTML element with its semantics and behavior, and leaves styling to your app: the package ships no CSS.
+**Unstyled, composable React primitives for accessible interfaces.**
 
-## Usage
+`@pandorah-ui/react` provides interaction behavior, state management, and accessibility attributes without shipping CSS. Components use native HTML elements by default, while the `render` prop lets you bring your own elements and styling.
 
-`Button` renders a native `<button>` and accepts its props and `ref`.
+## Installation
+
+```bash
+pnpm install @pandorah-ui/react @floating-ui/react
+```
+
+`@floating-ui/react` is a peer dependency. Keep a single copy of it and `@pandorah-ui/react` in your application so nested floating layers and dialogs share the same context and modal stack.
+
+## Quick start
 
 ```tsx
-import { Button } from '@pandorah-ui/react';
+import { Button, Dialog } from '@pandorah-ui/react';
 
-function SaveButton({ saving, save }: { saving: boolean; save: () => void }) {
+export function Example() {
   return (
-    <Button className="save-button" pending={saving} onClick={save}>
-      {saving ? 'Saving…' : 'Save'}
-    </Button>
+    <Dialog.Root>
+      <Dialog.Trigger render={<Button />}>Open dialog</Dialog.Trigger>
+      <Dialog.Backdrop className="dialog-backdrop">
+        <Dialog.Popup className="dialog-popup">
+          <Dialog.Title>Confirm action</Dialog.Title>
+          <Dialog.Description>
+            Are you sure you want to continue?
+          </Dialog.Description>
+          <Dialog.Close>Cancel</Dialog.Close>
+        </Dialog.Popup>
+      </Dialog.Backdrop>
+    </Dialog.Root>
   );
 }
 ```
 
-- `type` defaults to `"button"`, so a `Button` inside a form doesn't submit it. Pass `type="submit"` when it should.
-- `pending` marks an operation in progress. The button stays focusable, but `Button` prevents its normal activation and marks it with `aria-disabled="true"` and `data-pending` for styling. Showing progress, such as a spinner, is up to you.
+Pandorah UI does not style these elements. Supply classes and CSS as needed:
 
-## Composition
-
-The `render` prop replaces the `<button>` that `Button` renders with your own element, without adding wrappers. Pass an element to reuse a component, or a function to control the markup.
-
-### Element
-
-```tsx
-import type { ComponentPropsWithRef } from 'react';
-
-function OutlineButton(props: ComponentPropsWithRef<'button'>) {
-  return <button {...props} data-variant="outline" />;
+```css
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(0 0 0 / 0.4);
 }
 
-<Button render={<OutlineButton />}>Save</Button>;
+.dialog-popup {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 0.75rem;
+}
 ```
 
-`Button` merges its props, behavior and `ref` into the element, so the component must pass all of them to the `<button>` it renders. Spreading `props` is enough, since `ref` is a prop. The element must render a `<button>`; for navigation, use a link instead.
+## Composition and styling
 
-### Function
+Components accept standard element props and refs. Use `render` to replace their default elements without adding a wrapper:
 
 ```tsx
-<Button
-  render={(props) => (
-    <button {...props}>
-      <span aria-hidden="true">+</span>
-      {props.children}
-    </button>
-  )}
->
-  Add
-</Button>
+<Button render={<button className="primary" />}>Save</Button>
 ```
 
-The function receives the props `Button` prepared, including its `ref`, and must forward all of them to the `<button>` it returns. Overriding one, for example with a handler written after `{...props}`, replaces `Button`'s, so pass your own props and handlers to `Button`. The function is called rather than rendered as a component, so it can't use Hooks.
+Custom components and render functions must forward the provided props and ref. When replacing a native control with a different HTML element, you are responsible for its appropriate semantics, focusability, and keyboard behavior. Component state can be styled with attributes such as `data-pending` on Button and `data-popup-open` on Dialog.Trigger.
+
+Dialog.Popup and Dialog.Backdrop have `data-state="open"` while the dialog is open and `data-state="closed"` once it closes. A closing dialog stays mounted, and modal, until the finite CSS transitions and animations of the Popup and Backdrop themselves finish; animations of their descendants are not awaited. Animate entry with `@starting-style` or keyframes:
+
+```css
+.dialog-popup {
+  transition: opacity 200ms;
+}
+
+@starting-style {
+  .dialog-popup[data-state='open'] {
+    opacity: 0;
+  }
+}
+
+.dialog-popup[data-state='closed'] {
+  opacity: 0;
+}
+```
+
+While a modal dialog is open, the rest of the page is inert. To keep content such as toasts usable, render it in a direct child of `body` marked with `data-pandorah-modal-exempt`. A container that holds the element that opened the dialog is not exempt.

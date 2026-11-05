@@ -25,15 +25,11 @@ export function useDevelopmentDiagnostics(
 
 export function findElementProblem(
   name: string,
-  tag: string,
   ownedEntries: [string, unknown][],
   element: unknown,
 ) {
   if (!isElement(element)) {
     return `${name}: the render element did not attach the ref. It must render a component that passes \`ref\` and its props to a DOM element.`;
-  }
-  if (element.localName !== tag) {
-    return `${name}: rendered <${element.localName}>, but it must render <${tag}>.`;
   }
   for (const [key, value] of ownedEntries) {
     if (value === undefined && element.hasAttribute(key)) {
@@ -53,6 +49,9 @@ function isElement(value: unknown): value is Element {
 function reflects(element: Element, key: string, value: unknown) {
   if (typeof value === 'boolean' && !/^(aria|data)-/.test(key)) {
     return element.hasAttribute(key) === value;
+  }
+  if (value === true && key.startsWith('data-')) {
+    return element.hasAttribute(key);
   }
   return element.getAttribute(key) === String(value);
 }

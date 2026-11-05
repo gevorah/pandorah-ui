@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
 import { StyledButton } from './components/styled-button';
+import { tab } from './test/browser';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -22,7 +23,9 @@ function contrast(foreground: string, background: string) {
       .slice(0, 3)
       .map((channel) => {
         const value = Number(channel) / 255;
-        return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+        return value <= 0.03928
+          ? value / 12.92
+          : ((value + 0.055) / 1.055) ** 2.4;
       });
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   };
@@ -85,16 +88,20 @@ describe('Workshop button design', () => {
   });
 
   it('shows a visible focus indicator for keyboard focus only', async () => {
-    render(<StyledButton>Save</StyledButton>);
+    render(
+      <>
+        <input aria-label="Before" />
+        <StyledButton>Save</StyledButton>
+      </>,
+    );
     const button = container.querySelector('button')!;
 
     await userEvent.click(button);
     expect(style(button).outlineColor).toBe('rgba(0, 0, 0, 0)');
 
-    button.blur();
-    // Focus after keyboard input is keyboard focus.
-    await userEvent.keyboard('{Shift}');
-    button.focus();
+    container.querySelector('input')!.focus();
+    await tab();
+    expect(document.activeElement).toBe(button);
     expect(button.matches(':focus-visible')).toBe(true);
     expect(
       contrast(style(button).outlineColor, 'rgb(255, 255, 255)'),

@@ -19,7 +19,18 @@ import {
   vi,
   type MockInstance,
 } from 'vitest';
-import { cdp, userEvent } from 'vitest/browser';
+import { userEvent } from 'vitest/browser';
+
+import {
+  axProperties,
+  chromiumAXNode,
+  chromiumTap,
+  clickFocusesButtons,
+  isChromium,
+  mouse,
+  space,
+  tab,
+} from './test/browser';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -263,13 +274,57 @@ describe('Button', () => {
     );
   });
 
-  it('rejects render elements that are not buttons before rendering', () => {
-    expect(renderError(<Button render={<a href="/" />} />)).toBe(
-      'Button: `render` must be <button>, but received <a>.',
-    );
+  it('rejects a render element that is not a single element', () => {
     expect(renderError(<Button render={<Fragment />} />)).toBe(
-      'Button: `render` must be a single element that renders <button>.',
+      'Button: `render` must be a single element.',
     );
+  });
+
+  it('renders another element with its props, ref and pending behavior, but not native button behavior', () => {
+    const ref = createRef<HTMLButtonElement>();
+    const onClick = vi.fn();
+    const app = (pending: boolean) => (
+      <Button
+        ref={ref}
+        pending={pending}
+        onClick={onClick}
+        render={<a href="#save" />}
+      >
+        Save
+      </Button>
+    );
+    render(app(true));
+    const link = container.querySelector('a')!;
+    expect(ref.current).toBe(link);
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.hasAttribute('data-pending')).toBe(true);
+    link.click();
+    expect(onClick).not.toHaveBeenCalled();
+    expect(location.hash).toBe('');
+
+    render(app(false));
+    link.click();
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(link.hasAttribute('aria-disabled')).toBe(false);
+    // A link keeps its own role: Button does not make it a button.
+    expect(link.getAttribute('role')).toBeNull();
+    expect(link.hasAttribute('type')).toBe(false);
+
+    // The element's own attributes and an explicit `type` reach it.
+    render(
+      <Button render={<a href="#guide" type="text/html" />}>Guide</Button>,
+    );
+    expect(container.querySelector('a')!.getAttribute('type')).toBe(
+      'text/html',
+    );
+    render(
+      <Button type="submit" render={<a href="#guide" />}>
+        Guide
+      </Button>,
+    );
+    expect(container.querySelector('a')!.getAttribute('type')).toBe('submit');
+    expect(errors()).toEqual([]);
+    history.replaceState(null, '', location.pathname + location.search);
   });
 
   it('checks what a render component mounts, including boolean and absent attributes', () => {
@@ -296,7 +351,6 @@ describe('Button', () => {
     );
 
     expect(errors()).toEqual([
-      'Button: rendered <div>, but it must render <button>.',
       'Button: the render element did not pass `disabled` to its DOM element.',
       'Button: the render element added `aria-disabled`, which the component leaves out.',
     ]);
@@ -408,19 +462,16 @@ describe('Button', () => {
     ]);
   });
 
-  it('rejects a render function that returns anything but a button', () => {
+  it('rejects a render function that returns anything but a single element', () => {
     // @ts-expect-error A render function returns an element.
     const returnsChildren = <Button render={(props) => props.children} />;
 
-    expect(renderError(<Button render={() => <a href="/" />} />)).toBe(
-      'Button: `render` must return <button>, but returned <a>.',
-    );
     for (const app of [
       <Button render={() => <Fragment />} />,
       returnsChildren,
     ]) {
       expect(renderError(app)).toBe(
-        'Button: `render` must return a single element that renders <button>.',
+        'Button: `render` must return a single element.',
       );
     }
   });
@@ -484,46 +535,6 @@ describe('Button', () => {
   });
 });
 
-async function accessibilityState(name: string) {
-  type Node = {
-    ignored: boolean;
-    role?: { value: string };
-    name?: { value: string };
-    properties?: { name: string; value: { value: unknown } }[];
-  };
-  type FrameTree = { frame: { id: string }; childFrames?: FrameTree[] };
-  const session = cdp();
-  await session.send('Accessibility.enable');
-  const { frameTree } = (await session.send('Page.getFrameTree')) as {
-    frameTree: FrameTree;
-  };
-  const frames: string[] = [];
-  const walk = (tree: FrameTree) => {
-    frames.push(tree.frame.id);
-    tree.childFrames?.forEach(walk);
-  };
-  walk(frameTree);
-  for (const frameId of frames) {
-    const { nodes } = (await session.send('Accessibility.getFullAXTree', {
-      frameId,
-    })) as { nodes: Node[] };
-    const node = nodes.find(
-      (candidate) =>
-        !candidate.ignored &&
-        candidate.role?.value === 'button' &&
-        candidate.name?.value === name,
-    );
-    if (node) {
-      return Object.fromEntries(
-        (node.properties ?? [])
-          .filter(({ name }) => name === 'disabled' || name === 'focusable')
-          .map(({ name, value }) => [name, value.value]),
-      );
-    }
-  }
-  return undefined;
-}
-
 describe('Button pending', () => {
   it('stays focusable and announced as unavailable, without activating', async () => {
     const handlers = {
@@ -548,24 +559,37 @@ describe('Button pending', () => {
       </form>,
     );
     const button = container.querySelector('button')!;
+    // In WebKit, tab() holds Option, which is not part of this contract.
     const keys = (handler: typeof handlers.onKeyDown) =>
-      handler.mock.calls.map(([event]) => event.key);
+      handler.mock.calls
+        .map(([event]) => event.key)
+        .filter((key) => key !== 'Alt');
 
     expect(button.disabled).toBe(false);
     expect(button.type).toBe('submit');
     expect(button.getAttribute('aria-disabled')).toBe('true');
     expect(button.hasAttribute('data-pending')).toBe(true);
-    expect(await accessibilityState('Save')).toEqual({
-      disabled: true,
-      focusable: true,
-    });
+    // Only Chromium exposes its accessibility tree; elsewhere the DOM contract
+    // above (aria-disabled without disabled) is what the engine maps.
+    if (isChromium) {
+      expect(
+        axProperties(await chromiumAXNode('button', 'Save'), [
+          'disabled',
+          'focusable',
+        ]),
+      ).toEqual({ disabled: true, focusable: true });
+    }
 
     await userEvent.dblClick(button, { force: true });
+    expect(document.activeElement).toBe(
+      clickFocusesButtons ? button : document.body,
+    );
+    button.focus();
     expect(document.activeElement).toBe(button);
     await userEvent.keyboard('{Enter}');
     await userEvent.keyboard(' ');
     await userEvent.keyboard('a{Escape}{ArrowDown}');
-    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await tab({ shift: true });
     expect(document.activeElement).toBe(container.querySelector('input'));
     await userEvent.keyboard('{Enter}');
 
@@ -623,8 +647,8 @@ describe('Button pending', () => {
       pending: true,
     });
     // A natively disabled button still dispatches pointer events.
-    await mouse('mousePressed', button());
-    await mouse('mouseReleased', button());
+    await mouse('down', button());
+    await mouse('up', button());
     expect(onPointerDown).not.toHaveBeenCalled();
     render(app({ pending: true }));
     expect(attributes()).toEqual({
@@ -640,6 +664,8 @@ describe('Button pending', () => {
     });
 
     await userEvent.click(button());
+    // WebKit does not focus a clicked button.
+    button().focus();
     await userEvent.keyboard('{Enter}');
     expect(onClick).toHaveBeenCalledTimes(2);
     expect(onPointerDown).toHaveBeenCalledTimes(1);
@@ -720,13 +746,16 @@ describe('Button pending', () => {
     button.dispatchEvent(
       new MouseEvent('click', { bubbles: true, cancelable: true, detail: 0 }),
     );
-    await tap(button);
+    // Desktop Firefox and WebKit have no touch input to emulate.
+    if (isChromium) await chromiumTap(button);
 
     for (const handler of Object.values(handlers)) {
       expect(handler).not.toHaveBeenCalled();
     }
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(ancestorSawCanceled).toEqual([true, true, true]);
+    expect(ancestorSawCanceled).toEqual(
+      isChromium ? [true, true, true] : [true, true],
+    );
   });
 
   it('decides activation when the click happens', async () => {
@@ -744,10 +773,10 @@ describe('Button pending', () => {
       (button: Element) => Promise<void>,
     ];
     const pointerPress: Press = [
-      (button) => mouse('mousePressed', button),
-      (button) => mouse('mouseReleased', button),
+      (button) => mouse('down', button),
+      (button) => mouse('up', button),
     ];
-    const spacePress: Press = [() => space('keyDown'), () => space('keyUp')];
+    const spacePress: Press = [() => space('down'), () => space('up')];
     const pressAcross = async (
       [down, up]: Press,
       from: boolean,
@@ -802,7 +831,9 @@ describe('Button pending', () => {
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(server.innerHTML).toBe(serverHtml);
     await userEvent.click(button, { force: true });
-    expect(document.activeElement).toBe(button);
+    expect(document.activeElement).toBe(
+      clickFocusesButtons ? button : document.body,
+    );
     server.querySelector('input')!.focus();
     await userEvent.keyboard('{Enter}');
     expect(onSubmit).not.toHaveBeenCalled();
@@ -812,40 +843,3 @@ describe('Button pending', () => {
     server.remove();
   });
 });
-
-async function mouse(type: 'mousePressed' | 'mouseReleased', element: Element) {
-  const { x, y } = element.getBoundingClientRect();
-  await cdp().send('Input.dispatchMouseEvent', {
-    type,
-    x: x + 5,
-    y: y + 5,
-    button: 'left',
-    clickCount: 1,
-  });
-}
-
-async function space(type: 'keyDown' | 'keyUp') {
-  await cdp().send('Input.dispatchKeyEvent', {
-    type,
-    key: ' ',
-    code: 'Space',
-    windowsVirtualKeyCode: 32,
-    ...(type === 'keyDown' && { text: ' ' }),
-  });
-}
-
-async function tap(element: Element) {
-  const { x, y, width, height } = element.getBoundingClientRect();
-  const point = { x: x + width / 2, y: y + height / 2 };
-  const session = cdp();
-  await session.send('Emulation.setTouchEmulationEnabled', { enabled: true });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [point],
-  });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchEnd',
-    touchPoints: [],
-  });
-  await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });
-}
