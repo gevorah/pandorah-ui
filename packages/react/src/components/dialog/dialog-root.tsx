@@ -16,6 +16,8 @@ import {
   type ReactNode,
 } from 'react';
 
+import { exitAnimationsFinished } from '../../internal/exit-animations';
+import { hasNativeEscapeOwner } from '../../internal/native-escape';
 import {
   DialogBackdropContext,
   DialogContext,
@@ -47,9 +49,6 @@ const dismissReasons: Partial<Record<OpenChangeReason, DismissReason>> = {
   'escape-key': 'escape-key',
   'outside-press': 'outside-press',
 };
-
-const nativeEscapeOwner =
-  'dialog:modal, [popover]:popover-open:not([popover="manual"])';
 
 function DialogNode({
   open: openProp,
@@ -141,20 +140,7 @@ function canDismiss(popup: HTMLElement, reason: DismissReason, event: Event) {
   if (event.defaultPrevented) return false;
   if (!isTopmostModal(popup)) return false;
   if (reason === 'escape-key') {
-    return !popup.ownerDocument.querySelector(nativeEscapeOwner);
+    return !hasNativeEscapeOwner(popup.ownerDocument);
   }
   return !isInExemptContainer(popup, event.target);
-}
-
-function exitAnimationsFinished(elements: (HTMLElement | null)[]) {
-  const animations = elements
-    .flatMap((element) => element?.getAnimations({ subtree: true }) ?? [])
-    .filter((animation) => {
-      const effect = animation.effect as KeyframeEffect | null;
-      return (
-        elements.includes(effect?.target as HTMLElement | null) &&
-        effect?.getComputedTiming().endTime !== Infinity
-      );
-    });
-  return Promise.allSettled(animations.map((animation) => animation.finished));
 }

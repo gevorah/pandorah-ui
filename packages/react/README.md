@@ -61,7 +61,7 @@ Components accept standard element props and refs. Use `render` to replace their
 <Button render={<button className="primary" />}>Save</Button>
 ```
 
-Custom components and render functions must forward the provided props and ref. When replacing a native control with a different HTML element, you are responsible for its appropriate semantics, focusability, and keyboard behavior. Component state can be styled with attributes such as `data-pending` on Button and `data-popup-open` on Dialog.Trigger.
+Custom components and render functions must forward the provided props and ref. When replacing a native control with a different HTML element, you are responsible for its appropriate semantics, focusability, and keyboard behavior. Component state can be styled with attributes such as `data-pending` on Button and `data-popup-open` on Dialog.Trigger and Popover.Trigger.
 
 Dialog.Popup and Dialog.Backdrop have `data-state="open"` while the dialog is open and `data-state="closed"` once it closes. A closing dialog stays mounted, and modal, until the finite CSS transitions and animations of the Popup and Backdrop themselves finish; animations of their descendants are not awaited. Animate entry with `@starting-style` or keyframes:
 
@@ -82,3 +82,5 @@ Dialog.Popup and Dialog.Backdrop have `data-state="open"` while the dialog is op
 ```
 
 While a modal dialog is open, the rest of the page is inert. To keep content such as toasts usable, render it in a direct child of `body` marked with `data-pandorah-modal-exempt`. A container that holds the element that opened the dialog is not exempt.
+
+Popover.Popup is a non-modal dialog anchored to its trigger. It closes on Escape, an outside press or when focus leaves it, and accepts `side`, `align` and `sideOffset`. A press on a control outside reports `outside-press` and then `focus-out`, so a controlled consumer that keeps the popover open refuses both. It has the same `data-state` lifecycle as Dialog.Popup, plus `data-side` and `data-align` for the placement it ended up with, and `--pandorah-popover-available-width` and `--pandorah-popover-available-height` for the space left in the viewport. A Dialog.Root rendered inside Popover.Popup unmounts when the popover closes; to close the popover when its dialog opens, render the Dialog.Root outside it and control it.

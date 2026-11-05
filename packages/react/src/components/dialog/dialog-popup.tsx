@@ -24,8 +24,8 @@ import { useMergeRefs } from '../../internal/composition/use-merge-refs';
 import {
   useRender,
   type ComposableProps,
-  type UseRenderOptions,
 } from '../../internal/composition/use-render';
+import { splitFloatingProps } from '../../internal/split-floating-props';
 import { DialogBackdropContext, useDialogContext } from './dialog-context';
 import { isTopmostModal } from './modality';
 import { lockScroll } from './scroll-lock';
@@ -36,9 +36,6 @@ export interface DialogPopupProps
   role?: 'dialog' | 'alertdialog';
   initialFocus?: RefObject<HTMLElement | null>;
 }
-
-type Interceptors = NonNullable<UseRenderOptions<'div'>['interceptors']>;
-type Interceptor = (event: unknown, next: () => void) => void;
 
 const getInsideBody = () => [document.body];
 
@@ -181,25 +178,4 @@ function PopupElement({
       {element}
     </FloatingFocusManager>
   );
-}
-
-function splitFloatingProps(floatingProps: Record<string, unknown>) {
-  const { tabIndex, ...rest } = floatingProps;
-  const attributes: Record<string, unknown> = {};
-  const interceptors: Record<string, Interceptor> = {};
-  for (const [key, value] of Object.entries(rest)) {
-    if (!key.startsWith('on')) {
-      attributes[key] = value;
-    } else if (typeof value === 'function') {
-      interceptors[key] = (event, next) => {
-        next();
-        value(event);
-      };
-    }
-  }
-  return {
-    tabIndex: tabIndex as number | undefined,
-    attributes,
-    interceptors: interceptors as Interceptors,
-  };
 }

@@ -7,9 +7,9 @@ import {
   useRender,
   type ComposableProps,
 } from '../../internal/composition/use-render';
+import { isUnavailable } from '../../internal/is-unavailable';
 import { getNativeButtonAttributes } from '../button/button-behavior';
 import { useDialogContext } from './dialog-context';
-import { isUnavailable } from './is-unavailable';
 
 export interface DialogTriggerProps
   extends ComponentPropsWithRef<'button'>, ComposableProps<'button'> {}

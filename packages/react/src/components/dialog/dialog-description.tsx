@@ -6,8 +6,8 @@ import {
   useRender,
   type ComposableProps,
 } from '../../internal/composition/use-render';
+import { useRegisteredId } from '../../internal/use-registered-id';
 import { useDialogContext } from './dialog-context';
-import { useRegisteredId } from './use-registered-id';
 
 export interface DialogDescriptionProps
   extends ComponentPropsWithRef<'p'>, ComposableProps<'p'> {}

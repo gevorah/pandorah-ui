@@ -1,0 +1,91 @@
+.popup {
+  box-sizing: border-box;
+  inline-size: 18rem;
+  max-inline-size: var(--pandorah-popover-available-width);
+  max-block-size: var(--pandorah-popover-available-height);
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 0.5rem;
+  background-color: var(--color-background-surface);
+  box-shadow: var(--shadow-overlay);
+  color: var(--color-text-primary);
+  transition:
+    opacity 150ms ease,
+    scale 150ms ease;
+}
+
+.popup:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Grow from the trigger. */
+.popup[data-side='bottom'] {
+  transform-origin: top;
+}
+
+.popup[data-side='top'] {
+  transform-origin: bottom;
+}
+
+.popup[data-side='left'] {
+  transform-origin: right;
+}
+
+.popup[data-side='right'] {
+  transform-origin: left;
+}
+
+@starting-style {
+  .popup[data-state='open'] {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.popup[data-state='closed'] {
+  opacity: 0;
+  scale: 0.96;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.description {
+  margin: 0.25rem 0 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.input {
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--color-border-control);
+  border-radius: 0.375rem;
+  background-color: var(--color-background-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 1px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup {
+    transition: none;
+  }
+}
